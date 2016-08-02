@@ -131,11 +131,10 @@ class Main {
    * @param  {Object} msg  Message resolvable
    */
   generateHelp(msg) {
-    let commands        = [...this.commands],
-        msgArray        = [];
+    let msgArray = [];
 
     msgArray.push('```xl');
-    for (let command of commands) {
+    for (let command of this.commands.values()) {
       msgArray.push(`${utils.pad(command.name, 15)} ${command.description}`);
     }
     msgArray.push('```');
@@ -163,7 +162,7 @@ class Main {
     const command = this.commands.get(cmd);
 
     // execute command
-    command._execute(msg, args, cmd);
+    command.execute(msg, args, cmd);
   }
 
   /**
