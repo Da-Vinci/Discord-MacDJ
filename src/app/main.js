@@ -86,6 +86,7 @@ class Main {
    */
   onReady() {
     let payload = {
+      prefix: config.prefix,
       user: client.user,
       users: client.users,
       servers: client.servers.map(s => { return { id: s.id, name: s.name, icon: s.icon }; }),
