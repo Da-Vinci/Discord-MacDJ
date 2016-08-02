@@ -3,7 +3,7 @@
 const path = require('path');
 const Datastore = require('nedb');
 const electron = require('electron');
-const Discord = require('discord.js');
+const Discord = require('discordie');
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
 const app = electron.app;
@@ -11,7 +11,7 @@ const Menu = electron.Menu;
 const appMenu = require('./appMenu')(app);
 const utils = require('./lib/utils');
 const Player = require('./lib/player');
-const client = new Discord.Client();
+const client = new Discord();
 
 let config = {},
   main;
@@ -52,10 +52,10 @@ class Main {
     });
 
     // Bot event handlers
-    client.on('ready', this.onReady.bind(this));
-    client.on('error', this.onError.bind(this));
-    client.on('disconnected', this.onDisconnect.bind(this));
-    client.on('message', this.onMessage.bind(this));
+    client.Dispatcher.on("GATEWAY_READY", this.onReady.bind(this));
+    //client.on('error', this.onError.bind(this));
+    //client.on('disconnected', this.onDisconnect.bind(this));
+    client.Dispatcher.on("MESSAGE_CREATE", this.onMessage.bind(this));
 
     this.player = new Player(config);
 
@@ -76,11 +76,10 @@ class Main {
       }
 
       this.token = doc.token;
-      client.loginWithToken(this.token).then(() => {
-        if (!this.mainWindow) {
-          this.createWindow();
-        }
-      }).catch(err => console.log(err));
+      client.connect({ token: this.token });
+      if (!this.mainWindow) {
+        this.createWindow();
+      }
     });
   }
 
@@ -90,9 +89,9 @@ class Main {
   onReady() {
     let payload = {
       prefix: config.prefix,
-      user: client.user,
-      users: client.users,
-      servers: client.servers.map(s => {
+      user: client.User,
+      users: client.Users,
+      servers: client.Guilds.map(s => {
         return {
           id: s.id,
           name: s.name,
@@ -158,12 +157,13 @@ class Main {
    * Message handler
    * @param  {Object} msg Message resolvable
    */
-  onMessage(msg) {
+  onMessage(event) {
+    let msg = event.message;
     const prefix = config.prefix || '+',
-          params = msg.cleanContent.split(' ');
+          params = msg.content.split(' ');
 
     if (!params.join(' ').startsWith(prefix)) return;
-    if (msg.author.bot || msg.author.equals(client.user)) return;
+    if (msg.author.bot || msg.author.equals(client.User)) return;
 
     const cmd = params[0].replace(prefix, '').toLowerCase(),
           args = params.slice(1);
@@ -175,7 +175,7 @@ class Main {
 
     // execute command
     command.execute.call(this, msg, args);
-  }
+    }
 
   /**
    * Save the token for logging in

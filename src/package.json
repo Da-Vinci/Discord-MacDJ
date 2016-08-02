@@ -16,7 +16,8 @@
     "start": "electron index.js"
   },
   "dependencies": {
-    "discord.js": "^8.0.0",
+    "discord.js": "github:hydrabolt/discord.js#indev",
+    "discordie": "github:qeled/discordie#dev",
     "moment": "^2.11.2",
     "nedb": "^1.8.0",
     "ytdl-core": "^0.7.17"
