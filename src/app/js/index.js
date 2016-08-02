@@ -17,9 +17,9 @@ function MainController($scope) {
       {key: "Default Volume", value: "100", "format": "%"}
   ];
 
-  ipcRenderer.on('ready', (event, client) => {
-    $scope.bot = client.user;
-    $scope.channels = client.channels;
+  ipcRenderer.on('ready', (event, payload) => {
+    $scope.bot = payload.user;
+    $scope.channels = payload.voiceChannels;
     $('.overlay').remove();
     $scope.$apply();
   });

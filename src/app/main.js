@@ -85,12 +85,15 @@ class Main {
    * Client ready event handler
    */
   onReady() {
-    this.mainWindow.webContents.send('ready', {
-        user: client.user,
-        channels: client.channels.map(function(c) {
-            return {name: c.name, id: c.id};
-        })
-    });
+    let payload = {
+      user: client.user,
+      users: client.users,
+      servers: client.servers.map(s => { return { id: s.id, name: s.name, icon: s.icon }; }),
+      textChannels: client.channels.filter(c => c.type === 'text').map(c => { return { id: c.id, name: c.name }; }),
+      voiceChannels: client.channels.filter(c => c.type === 'voice').map(c => { return { id: c.id, name: c.name }; })
+    };
+
+    this.mainWindow.webContents.send('ready', payload);
   }
 
   /**
