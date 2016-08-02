@@ -10,6 +10,7 @@ const app = electron.app;
 const Menu = electron.Menu;
 const appMenu = require('./appMenu')(app);
 const utils = require('./lib/utils');
+const Player = require('./lib/player');
 const client = new Discord.Client();
 
 let config = {},
@@ -56,6 +57,8 @@ class Main {
     client.on('disconnected', this.onDisconnect.bind(this));
     client.on('message', this.onMessage.bind(this));
 
+    this.player = new Player(config);
+
     return this;
   }
 
@@ -99,6 +102,8 @@ class Main {
         };
       })
     };
+
+    this.player.start(client);
 
     this.mainWindow.webContents.send('ready', payload);
   }
@@ -169,7 +174,7 @@ class Main {
     const command = this.commands.get(cmd);
 
     // execute command
-    command.execute(msg, args, cmd);
+    command.execute.call(this, msg, args);
   }
 
   /**
