@@ -7,27 +7,37 @@ const config = remote.app.config;
 
 let main = angular.module('mainApp', ['ngSanitize', 'scrollglue']);
 
-main.controller('MainController', ['$scope', MainController]);
+main.controller('MainController', ['$scope', '$sce', MainController]);
 main.controller('TokenController', ['$scope', TokenController]);
 
-function MainController($scope) {
-  $scope.bot = { username: 'MacDJ' };
+function MainController($scope, $sce) {
+  $scope.trustAsHtml = $sce.trustAsHtml; // i don't trust this AAHAHAHAHAHAHAHAHA
+  $scope.bot = { username: '' };
   $scope.quick = "Hello!";
   $scope.settings = [
+      {key: "Prefix", value: '<input type="text" id="prefix"></input>', format: ""},
       {key: "Default Volume", value: "100", "format": "%"}
   ];
 
-  ipcRenderer.on('ready', (event, payload) => {
-    $scope.bot = payload.user;
-    $scope.channels = payload.voiceChannels;
+  ipcRenderer.on('ready', (event, client) => {
+    $scope.bot = client.user;
+    $scope.servers = client.servers;
     $('.overlay').remove();
     $scope.$apply();
   });
 }
 
 $( document ).ready(function() {
-    window.$('#volume').on('input', function() {
+    $('#volume').on('input', function() {
         console.log($(this).val());
+    });
+    $('#prefix').keypress(function (e) {
+        if (e.which == 13) {
+            if ($(this).val().length < 33) {
+                ipcRenderer.send('prefix', $(this).val())
+            }
+            return false;
+        }
     });
 });
 
