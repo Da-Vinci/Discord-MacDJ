@@ -51,9 +51,6 @@ class Main {
     bot.on('ready', this.onReady.bind(this));
     bot.on('error', this.onError.bind(this));
     bot.on('disconnected', this.onDisconnect.bind(this));
-    
-    // Renderer event handlers
-    ipcMain.on('activateChannel', this.activateChannel.bind(this));
   }
   
   get app() {
