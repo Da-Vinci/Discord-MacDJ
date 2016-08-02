@@ -21,10 +21,19 @@ function MainController($scope, $sce) {
 
   ipcRenderer.on('ready', (event, client) => {
     $scope.bot = client.user;
-    $scope.servers = client.servers;
+    $scope.servers = {};
     $('.overlay').remove();
     $scope.$apply();
   });
+
+  ipcRenderer.on('vc-update', (event, channels) => {
+      $scope.servers = $scope.servers.map(function(s) {
+          s.voiceChannels = s.voiceChannels.filter(c => channels.indexOf(c.id) > -1);
+          if (s.voiceChannels.length > 0)
+              return s;
+      });
+      $scope.apply();
+  })
 }
 
 $( document ).ready(function() {
