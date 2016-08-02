@@ -8,35 +8,56 @@
     <link rel="stylesheet" href="css/index.css">
   </head>
   <body>
-    <div ng-controller="MainController as main">
-        <header>MacDJ — {{title}}</header>
+    <div ng-controller="MainController as main" class="container">
+        <div class="row">
+            <div class="eleven column header">
+                <left><h2>MacDJ</h2></left>
+                <right><h3>{{bot.name}}</h3></right>
+            </div>
+        </div>
         <hr>
-        <div class="settings">
-            <table>
-                <thead>
-                    <th>Setting</th>
-                    <th>Value</th>
-                </thead>
-                <tbody ng-repeat="setting in settings">
-                    <tr>
-                        <td>{{setting.key}}</td>
-                        <td>{{setting.value}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            </hr>
-            <table>
-                <thead>
-                    <th>Channel</th>
-                    <th>Playing</th>
-                </thead>
-                <tbody ng-repeat="channel in channels">
-                    <tr>
-                        <td>{{channel.name}}</td>
-                        <td>{{channel.playing}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="row settings">
+            <div class="two column"><h4>Settings</h4></div>
+            <div class="eleven column">
+                <table class="u-full-width">
+                    <thead>
+                        <th>Setting</th>
+                        <th>Value</th>
+                    </thead>
+                    <tbody ng-repeat="setting in settings">
+                        <tr>
+                            <td>{{setting.key}}</td>
+                            <td>{{setting.value}}{{setting.format}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </hr>
+        <div class="row channels">
+            <div class="two column"><h4>Channels</h4></div>
+            <div class="eleven column">
+                <table class="u-full-width">
+                    <thead>
+                        <th>Channel</th>
+                        <th>Volume</th>
+                        <th>Playing</th>
+                    </thead>
+                    <tbody ng-repeat="channel in channels">
+                        <tr>
+                            <td>{{channel.name}}</td>
+                            <td>
+                                <input type="range" id="volume_{{channel.id}}" ng-model="channel.volume"></input>
+                                {{channel.volume}}%
+                            </td>
+                            <td>
+                                <p>{{channel.playing.active}}</p>
+                                <p ng-if="channel.playing.active">({{channel.playing.name}})</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

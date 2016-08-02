@@ -1,8 +1,9 @@
-@import url(https://fonts.googleapis.com/css?family=Exo:100,300);
+@import url('https://fonts.googleapis.com/css?family=Exo:300,400');
 body {
     background-color: #005895;
     color: #fff;
     font-family: Exo;
+    font-weight: 100;
 }
 h1 {
     font-size: 300%;
@@ -10,24 +11,25 @@ h1 {
     font-weight: 100;
 }
 
-.settings table {
-    width: 40%;
-    margin-left: 2em;
+.channels p {
+    display: inline;
+    margin-right: 0.25em;
 }
 
-.container {
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    text-align: center;
+.header {
+    margin-top: 3em;
 }
 
-header{
-    top: 0px;
-    padding-top: 1em;
-    padding-left: 1em;
-    font-size: 200%;
+thead {
+    font-weight: 400;
+}
+
+left {
+    float: left;
+}
+
+right {
+    float: right;
 }
 
 footer {

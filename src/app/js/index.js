@@ -10,18 +10,23 @@ main.controller('MainController', ['$scope', MainController]);
 main.controller('TokenController', ['$scope', TokenController]);
 
 function MainController($scope) {
-  $scope.title = "Main Page";
-  $scope.bot = {name: "Totally Wicked Bot Username Here!" }
+  $scope.bot = {name: "TestBoat" }
   $scope.quick = "Hello!";
   $scope.settings = [
       {key: "Token", value: "Mk12345.token.istotallyreal"},
-      {key: "Volume", value: "11"}
+      {key: "Default Volume", value: "100", "format": "%"}
   ];
   $scope.channels = [
-      {name: "General", playing: false},
-      {name: "Music", playing: true}
+      {name: "General", id: 1, playing: {active: false, name: ""}, volume: 100},
+      {name: "Music", id: 2, playing: {active: true, name: "Brainpower 72 Hour Remix"}, volume: 70}
   ]
 }
+
+$( document ).ready(function() {
+    window.$('#volume').on('input', function() {
+        console.log($(this).val());
+    });
+});
 
 function TokenController($scope) {
   $scope.token = config.token || "";
