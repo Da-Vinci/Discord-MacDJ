@@ -40,24 +40,33 @@
         </div>
         </hr>
         <div class="row channels">
-            <div class="two column"><h4>Channels</h4></div>
+            <div class="two column"><h4>Servers</h4></div>
             <div class="eleven column">
                 <table class="u-full-width">
-                    <thead>
-                        <th>Channel</th>
-                        <th>Volume</th>
-                        <th>Playing</th>
-                    </thead>
                     <tbody>
-                        <tr ng-repeat="servers in servers">
-                            <td>{{channel.name}}</td>
+                        <tr ng-repeat="server in servers">
                             <td>
-                                <input type="range" id="volume_{{channel.id}}" ng-model="channel.volume"></input>
-                                {{channel.volume}}%
-                            </td>
-                            <td>
-                                <p>{{channel.playing.active}}</p>
-                                <p ng-if="channel.playing.active">({{channel.playing.name}})</p>
+                                <h5>{{server.name}}</h5>
+                                <table>
+                                    <thead>
+                                        <th>Channel</th>
+                                        <th>Volume</th>
+                                        <th>Playing</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="channel in server.voiceChannels">
+                                            <td>{{channel.name}}</td>
+                                            <td>
+                                                <input type="range" id="volume_{{channel.id}}" ng-model="channel.volume"></input>
+                                                {{channel.volume}}%
+                                            </td>
+                                            <td>
+                                                <p>{{channel.playing.active}}</p>
+                                                <p ng-if="channel.playing.active">({{channel.playing.name}})</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
                     </tbody>
