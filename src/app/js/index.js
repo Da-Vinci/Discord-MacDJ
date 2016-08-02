@@ -20,7 +20,8 @@ function MainController($scope, $sce) {
   ];
 
     ipcRenderer.on('ready', (event, client) => {
-        $scope.bot = client.user;
+        $scope.client = client.user;
+        window.client = client;
         $scope.servers = {};
         $('.overlay').remove();
         $scope.$apply();

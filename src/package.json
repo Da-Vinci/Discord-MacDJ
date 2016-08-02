@@ -18,7 +18,8 @@
   "dependencies": {
     "discord.js": "^8.0.0",
     "moment": "^2.11.2",
-    "nedb": "^1.8.0"
+    "nedb": "^1.8.0",
+    "ytdl-core": "^0.7.17"
   },
   "devDependencies": {
     "electron-prebuilt": "^1.2.0"
