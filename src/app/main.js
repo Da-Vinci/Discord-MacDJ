@@ -3,20 +3,22 @@
 const path = require('path');
 const Datastore = require('nedb');
 const electron = require('electron');
+const Discord = require('discord.js');
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
 const app = electron.app;
 const Menu = electron.Menu;
 const appMenu = require('./appMenu')(app);
 const utils = require('./lib/utils');
+const client = new Discord.Client();
 
 let config = {},
-  main, client;
+  main;
 
 class Main {
 
-  constructor(_client) {
-    this.client = client = _client;
+  constructor() {
+    this.client = client;
     this.mainWindow = null;
     this.activeChannel = null;
     this.retries = 0;
@@ -53,6 +55,8 @@ class Main {
     client.on('error', this.onError.bind(this));
     client.on('disconnected', this.onDisconnect.bind(this));
     client.on('message', this.onMessage.bind(this));
+
+    return this;
   }
 
   get app() {
@@ -81,6 +85,7 @@ class Main {
    * Client ready event handler
    */
   onReady() {
+    this.mainWindow.webContents.send('ready', client.user);
   }
 
   /**
@@ -210,9 +215,5 @@ class Main {
   }
 }
 
-module.exports = bot => {
-  if (bot && !main) {
-    main = new Main(bot);
-  }
-  return client;
-};
+main = new Main();
+module.exports = main;
