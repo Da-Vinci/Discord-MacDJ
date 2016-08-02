@@ -89,9 +89,15 @@ class Main {
       prefix: config.prefix,
       user: client.user,
       users: client.users,
-      servers: client.servers.map(s => { return { id: s.id, name: s.name, icon: s.icon }; }),
-      textChannels: client.channels.filter(c => c.type === 'text').map(c => { return { id: c.id, name: c.name }; }),
-      voiceChannels: client.channels.filter(c => c.type === 'voice').map(c => { return { id: c.id, name: c.name }; })
+      servers: client.servers.map(s => {
+        return {
+          id: s.id,
+          name: s.name,
+          icon: s.icon,
+          textChannels: s.channels.filter(c => c.type === 'text').map(c => { return { id: c.id, name: c.name }; }),
+          voiceChannels: s.channels.filter(c => c.type === 'voice').map(c => { return { id: c.id, name: c.name }; })
+        };
+      })
     };
 
     this.mainWindow.webContents.send('ready', payload);
