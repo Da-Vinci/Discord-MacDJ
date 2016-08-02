@@ -1,8 +1,6 @@
-"use strict";
+'use strict';
 
-const fs = require('fs');
 const path = require('path');
-const moment = require('moment');
 const Datastore = require('nedb');
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
@@ -10,16 +8,19 @@ const ipcMain = electron.ipcMain;
 const app = electron.app;
 const Menu = electron.Menu;
 const appMenu = require('./appMenu')(app);
+const utils = require('./lib/utils');
 
-let main;
+let config = {},
+  main, client;
 
 class Main {
 
-  constructor(bot) {
-    this.bot = bot;
+  constructor(_client) {
+    this.client = client = _client;
     this.mainWindow = null;
     this.activeChannel = null;
     this.retries = 0;
+    this.commands = require('./commands');
 
     // debug: print userData path so we know where data files are being stored locally
     console.log(app.getPath('userData'));
@@ -48,9 +49,10 @@ class Main {
     });
 
     // Bot event handlers
-    bot.on('ready', this.onReady.bind(this));
-    bot.on('error', this.onError.bind(this));
-    bot.on('disconnected', this.onDisconnect.bind(this));
+    client.on('ready', this.onReady.bind(this));
+    client.on('error', this.onError.bind(this));
+    client.on('disconnected', this.onDisconnect.bind(this));
+    client.on('message', this.onMessage.bind(this));
   }
 
   get app() {
@@ -67,7 +69,7 @@ class Main {
       }
 
       this.token = doc.token;
-      this.bot.loginWithToken(this.token).then(() => {
+      client.loginWithToken(this.token).then(() => {
         if (!this.mainWindow) {
           this.createWindow();
         }
@@ -111,12 +113,53 @@ class Main {
   }
 
   /**
+   * Generate help command output
+   * 
+   * @param  {Object} msg  Message resolvable
+   */
+  generateHelp(msg) {
+    let commands        = [...this.commands],
+        msgArray        = [];
+    
+    msgArray.push('```xl');
+    for (let command of commands) {
+      msgArray.push(`${utils.pad(command.name, 15)} ${command.description}`);
+    }
+    msgArray.push('```');
+
+    client.sendMessage(msg.channel, msgArray);
+  }
+
+  /**
+   * Message handler
+   * @param  {Object} msg Message resolvable
+   */
+  onMessage(msg) {
+    const prefix = config.prefix || '+',
+          params = msg.cleanContent.split(' ');
+
+    if (!params.join(' ').startsWith(prefix)) return;
+    if (msg.author.bot || msg.author.equals(client.user)) return;
+
+    const cmd = params[0].replace(prefix, '').toLowerCase(),
+          args = params.slice(1);
+
+    if (cmd === 'help') return this.generateHelp(msg, args);
+    if (!this.commands.has(cmd)) return;    
+
+    const command = this.commands.get(cmd);
+
+    // execute command
+    command._execute(msg, args, cmd);
+  }
+
+  /**
    * Save the token for logging in
    * @param  {Object} event ipc event object
    * @param  {String} token token entered by the user
    */
   saveToken(event, token) {
-    let callback = err => {
+    const callback = () => {
       this.login();
       if (this.tokenWindow) this.tokenWindow.close();
     };
@@ -168,6 +211,8 @@ class Main {
 }
 
 module.exports = bot => {
-  main = new Main(bot);
-  return main;
+  if (bot && !main) {
+    main = new Main(bot);
+  }
+  return client;
 };
