@@ -11,16 +11,17 @@ main.controller('MainController', ['$scope', '$sce', MainController]);
 main.controller('TokenController', ['$scope', TokenController]);
 
 function MainController($scope, $sce) {
-  $scope.trustAsHtml = $sce.trustAsHtml; // i don't trust this AAHAHAHAHAHAHAHAHA
-  $scope.bot = { username: '' };
-  $scope.quick = "Hello!";
-  $scope.settings = [
-      {key: "Prefix", value: '<input type="text" id="prefix"></input>', format: ""},
-      {key: "Default Volume", value: "100", "format": "%"}
-  ];
+    $scope.trustAsHtml = $sce.trustAsHtml; // i don't trust this AAHAHAHAHAHAHAHAHA
+    $scope.bot = { username: '' };
+    $scope.settings = [
+        {key: "Prefix", value: '<input type="text" id="prefix" value="+"></input>', format: ""},
+        {key: "Default Volume", value: "100", "format": "%"}
+    ];
 
     ipcRenderer.on('ready', (event, client) => {
         $scope.client = client.user;
+        $scope.prefix = client.prefix;
+        window.$('#prefix').val(client.prefix);
         window.client = client;
         $scope.servers = {};
         $('.overlay').remove();
