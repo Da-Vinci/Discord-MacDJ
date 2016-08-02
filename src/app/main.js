@@ -85,7 +85,12 @@ class Main {
    * Client ready event handler
    */
   onReady() {
-    this.mainWindow.webContents.send('ready', client.user);
+    this.mainWindow.webContents.send('ready', {
+        user: client.user,
+        channels: client.channels.map(function(c) {
+            return {name: c.name, id: c.id};
+        })
+    });
   }
 
   /**
@@ -119,13 +124,13 @@ class Main {
 
   /**
    * Generate help command output
-   * 
+   *
    * @param  {Object} msg  Message resolvable
    */
   generateHelp(msg) {
     let commands        = [...this.commands],
         msgArray        = [];
-    
+
     msgArray.push('```xl');
     for (let command of commands) {
       msgArray.push(`${utils.pad(command.name, 15)} ${command.description}`);
@@ -150,7 +155,7 @@ class Main {
           args = params.slice(1);
 
     if (cmd === 'help') return this.generateHelp(msg, args);
-    if (!this.commands.has(cmd)) return;    
+    if (!this.commands.has(cmd)) return;
 
     const command = this.commands.get(cmd);
 
