@@ -11,10 +11,10 @@ main.controller('TokenController', ['$scope', TokenController]);
 
 function MainController($scope) {
   $scope.title = "Main Page";
-  $scope.bot = {name: bot.username, }
+  $scope.bot = {name: "Totally Wicked Bot Username Here!" }
   $scope.quick = "Hello!";
   $scope.settings = [
-      {key: "Token", value: bot.config.token},
+      {key: "Token", value: "Mk12345.token.istotallyreal"},
       {key: "Volume", value: "11"}
   ];
   $scope.channels = [
