@@ -2,15 +2,44 @@
 <html ng-app="mainApp">
   <head>
     <meta charset="UTF-8">
-    <title>Discord Bot Client</title>
+    <title>MacDJ</title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
     <link rel="stylesheet" href="css/index.css">
   </head>
   <body>
     <div ng-controller="MainController as main">
+        <header>MacDJ — {{title}}</header>
+        <hr>
+        <div class="settings">
+            <table>
+                <thead>
+                    <th>Setting</th>
+                    <th>Value</th>
+                </thead>
+                <tbody ng-repeat="setting in settings">
+                    <tr>
+                        <td>{{setting.key}}</td>
+                        <td>{{setting.value}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            </hr>
+            <table>
+                <thead>
+                    <th>Channel</th>
+                    <th>Playing</th>
+                </thead>
+                <tbody ng-repeat="channel in channels">
+                    <tr>
+                        <td>{{channel.name}}</td>
+                        <td>{{channel.playing}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    
+
     <script>window.$ = window.jQuery = require('./js/jquery.min.js');</script>
     <script src="js/angular.min.js"></script>
     <script src="js/angular-sanitize.js"></script>

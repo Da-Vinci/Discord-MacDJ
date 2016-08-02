@@ -14,13 +14,13 @@ const appMenu = require('./appMenu')(app);
 let main;
 
 class Main {
-  
+
   constructor(bot) {
     this.bot = bot;
     this.mainWindow = null;
     this.activeChannel = null;
     this.retries = 0;
-    
+
     // debug: print userData path so we know where data files are being stored locally
     console.log(app.getPath('userData'));
 
@@ -31,7 +31,7 @@ class Main {
     });
 
     app.config = {};
-    
+
     // App event handlers
     app.on('ready', this.login.bind(this));
 
@@ -46,17 +46,17 @@ class Main {
         this.createWindow();
       }
     });
-    
+
     // Bot event handlers
     bot.on('ready', this.onReady.bind(this));
     bot.on('error', this.onError.bind(this));
     bot.on('disconnected', this.onDisconnect.bind(this));
   }
-  
+
   get app() {
     return app;
   }
-  
+
   /**
    * Login with token or show the token window
    */
@@ -65,7 +65,7 @@ class Main {
       if (!doc || !doc.token) {
         return this.createTokenWindow();
       }
-      
+
       this.token = doc.token;
       this.bot.loginWithToken(this.token).then(() => {
         if (!this.mainWindow) {
@@ -79,10 +79,6 @@ class Main {
    * Client ready event handler
    */
   onReady() {
-    // load servers
-    this.bot.servers.forEach(server => {
-      this.createServer(server);
-    });
   }
 
   /**
@@ -113,7 +109,7 @@ class Main {
       this.login();
     }.bind(this), 5000);
   }
-  
+
   /**
    * Save the token for logging in
    * @param  {Object} event ipc event object
@@ -136,7 +132,7 @@ class Main {
       }
     });
   }
-  
+
   /**
    * Create the token window
    */
@@ -145,11 +141,11 @@ class Main {
     this.tokenWindow.loadURL('file://' + __dirname + '/token.html');
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
-    
+
     // Register the event listener to save token
     ipcMain.on('token', this.saveToken.bind(this));
   }
-  
+
   /**
    * Create the client window
    */
@@ -163,10 +159,10 @@ class Main {
     this.mainWindow.on('closed', () => {
       this.mainWindow = null;
     });
-    
+
     // create the client menu
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
-    
+
     app.mainWindow = this.mainWindow;
   }
 }
