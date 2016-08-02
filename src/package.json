@@ -1,15 +1,15 @@
 {
-  "name": "discord-macdj",
-  "productName": "discord-macdj",
+  "name": "Discord-MacDJ",
+  "productName": "Discord-MacDJ",
   "version": "0.3.0",
   "license": "MIT",
-  "homepage": "https://github.com/Bots-js/discord-macdj",
+  "homepage": "https://github.com/Bots-js/Discord-MacDJ",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bots-js/discord-macdj.git"
+    "url": "https://github.com/Bots-js/Discord-MacDJ.git"
   },
   "bugs": {
-    "url": "https://github.com/Bots-js/discord-macdj/issues"
+    "url": "https://github.com/Bots-js/Discord-MacDJ/issues"
   },
   "private": true,
   "scripts": {
