@@ -1,0 +1,7 @@
+node_modules/*
+test/*
+public/*
+private/*
+views/*
+*.md
+*.json

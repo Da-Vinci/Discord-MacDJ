@@ -1,0 +1,83 @@
+body {
+  background-color: #2e3136;
+  color: #bebfc1;
+  padding: 2em;
+  font-size: 1.3em;
+  line-height: 1.5em;
+}
+
+ul {
+  list-style: none;
+  padding: 0 0.5em;
+}
+
+.server-list,
+.channel-list {
+  display: flex;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  flex-shrink: 0;
+  float: left;
+  width: 15%;
+  padding: 0.4em;
+  margin: 0.4em;
+  height: 100%;
+}
+
+.server-list {
+  border-right: solid #555 1px;
+}
+
+.server-list li,
+.channel-list li {
+  cursor: pointer;
+  padding: 0.4em 0.1em 0.4em 0.6em;
+  margin: 0;
+}
+
+.server-list li:hover,
+.channel-list li:hover {
+  background-color: #282b30;
+}
+
+.channel {
+  background-color: #36393e;
+  display: flex;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  float: left;
+  width: 60%;
+  padding: 1em;
+  border: solid #555 1px;
+  border-radius: 0.8em;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+.channel h4 {
+  border-bottom: solid #555 1px;
+  padding-bottom: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+.messages {
+  overflow-y: scroll;
+  max-height: 500px;
+}
+
+.messages .message {
+  margin: 0.25em;
+}
+
+.send-wrapper input[type=text] {
+  width: 100%;
+  background-color: hsla(0,0%,100%,.06);
+  color: #efefef;
+  margin: 1em 0 0.5em;
+  border: solid #222 1px;
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.4);
+}
+
+.listContainer {
+  overflow-y: scroll;
+  max-height: 500px;
+}

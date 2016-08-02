@@ -1,0 +1,26 @@
+{
+  "name": "discord-macdj",
+  "productName": "discord-macdj",
+  "version": "0.3.0",
+  "license": "MIT",
+  "homepage": "https://github.com/Bots-js/discord-macdj",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bots-js/discord-macdj.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bots-js/discord-macdj/issues"
+  },
+  "private": true,
+  "scripts": {
+    "start": "electron index.js"
+  },
+  "dependencies": {
+    "discord.js": "^8.0.0",
+    "moment": "^2.11.2",
+    "nedb": "^1.8.0"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^1.2.0"
+  }
+}
