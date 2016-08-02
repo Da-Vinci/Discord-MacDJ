@@ -54,15 +54,15 @@
                                         <th>Playing</th>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="channel in server.voiceChannels">
-                                            <td>{{channel.name}}</td>
+                                        <tr>
+                                            <td>{{server.voiceChannel.name}}</td>
                                             <td>
                                                 <input type="range" id="volume_{{channel.id}}" ng-model="channel.volume"></input>
-                                                {{channel.volume}}%
+                                                {{server.voiceChannel.volume}}%
                                             </td>
                                             <td>
-                                                <p>{{channel.playing.active}}</p>
-                                                <p ng-if="channel.playing.active">({{channel.playing.name}})</p>
+                                                <p>{{server.voiceChannel.playing.active}}</p>
+                                                <p ng-if="channel.playing.active">({{server.voiceChannel.playing.name}})</p>
                                             </td>
                                         </tr>
                                     </tbody>

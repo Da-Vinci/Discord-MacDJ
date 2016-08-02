@@ -19,21 +19,30 @@ function MainController($scope, $sce) {
       {key: "Default Volume", value: "100", "format": "%"}
   ];
 
-  ipcRenderer.on('ready', (event, client) => {
-    $scope.bot = client.user;
-    $scope.servers = {};
-    $('.overlay').remove();
-    $scope.$apply();
-  });
+    ipcRenderer.on('ready', (event, client) => {
+        $scope.bot = client.user;
+        $scope.servers = {};
+        $('.overlay').remove();
+        $scope.$apply();
+    });
 
-  ipcRenderer.on('vc-update', (event, channels) => {
-      $scope.servers = $scope.servers.map(function(s) {
-          s.voiceChannels = s.voiceChannels.filter(c => channels.indexOf(c.id) > -1);
-          if (s.voiceChannels.length > 0)
-              return s;
+    ipcRenderer.on('voiceConnect', (event, channel) => {
+      $scope.servers = $scope.servers.map(s => {
+        s.voiceChannel = s.voiceChannels.find(c => c.id === channel.id);
+        return s;
       });
-      $scope.apply();
-  })
+      $scope.$apply();
+    });
+
+    ipcRenderer.on('voiceDisconnect', (event, channel) => {
+      $scope.servers = $scope.servers.map(s => {
+        if (s.voiceChannel && s.voiceChannel.id === channel.id) {
+          delete s.voiceChannel;
+        }
+        return s;
+      });
+      $scope.$apply();
+    });
 }
 
 $( document ).ready(function() {
