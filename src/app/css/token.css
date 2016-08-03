@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css?family=Exo:300,400');
+body {
+    background-color: #005895;
+    color: #fff;
+    font-family: Exo;
+    font-weight: 100;
+}
+
+input {
+    color: #000;
+}
+
+input[type="text"] {
+    margin-left: 1em;
+}
+
+.container {
+    text-align: center;
+}

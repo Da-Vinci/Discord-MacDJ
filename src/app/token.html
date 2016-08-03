@@ -5,14 +5,17 @@
     <title>Login With Token</title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/token.css">
   </head>
   <body>
     <div ng-controller="TokenController as token">
+        <div class="container">
+          <h3>Please enter your token</h3>
+      </div>
       <input type="text" size="64" ng-model="token" />
       <input type="button" ng-click="saveToken()" value="Login" />
     </div>
-    
+
     <script>window.$ = window.jQuery = require('./js/jquery.min.js');</script>
     <script src="js/angular.min.js"></script>
     <script src="js/angular-sanitize.js"></script>
