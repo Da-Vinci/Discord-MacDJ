@@ -31,6 +31,7 @@ function MainController($scope, $sce) {
         });
         $('.overlay').remove();
         $scope.$apply();
+        applyJS();
     });
 
     ipcRenderer.on('voiceConnect', (event, channel) => {
@@ -41,6 +42,7 @@ function MainController($scope, $sce) {
         return s;
       });
       $scope.$apply();
+      applyJS();
     });
 
     ipcRenderer.on('voiceDisconnect', (event, channel) => {
@@ -59,27 +61,32 @@ function MainController($scope, $sce) {
       console.log('queueUpdate', data)
       $scope.queue[data.guild] = data.queue;
       $scope.$apply();
-      $('.delete').on('click', function() {
-          let command = {command: 'queueDelete', data: {index: $(this).attr('index'), guild: $(this).attr('guild')}};
-          console.log(command);
-          ipcRenderer.send('command', command);
-      });
+      applyJS();
     });
 }
 
-$( document ).ready(function() {
+function applyJS() {
+    $('#volume').unbind();
+    $('#prefix').unbind();
+    $('.delete').unbind();
     $('#volume').on('input', function() {
         console.log($(this).val());
     });
     $('#prefix').keypress(function (e) {
         if (e.which == 13) {
             if ($(this).val().length < 33) {
+                console.log($(this).val())
                 ipcRenderer.send('prefix', $(this).val())
             }
             return false;
         }
     });
-});
+    $('.delete').on('click', function() {
+        let command = {command: 'queueDelete', data: {index: $(this).attr('index'), guild: $(this).attr('guild')}};
+        console.log(command);
+        ipcRenderer.send('command', command);
+    });
+};
 
 function TokenController($scope) {
   $scope.token = config.token || "";
