@@ -16,7 +16,7 @@
     "start": "electron index.js"
   },
   "dependencies": {
-    "discordie": "github:qeled/discordie#dev",
+    "discordie": "github:Bots-js/discordie#macdj",
     "moment": "^2.11.2",
     "nedb": "^1.8.0",
     "ytdl-core": "^0.7.17"
