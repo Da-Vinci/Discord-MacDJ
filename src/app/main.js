@@ -1,7 +1,7 @@
 'use strict';
 
+const fs = require('fs');
 const path = require('path');
-const Datastore = require('nedb');
 const electron = require('electron');
 const Discord = require('discordie');
 const BrowserWindow = electron.BrowserWindow;
@@ -12,9 +12,13 @@ const appMenu = require('./appMenu')(app);
 const utils = require('./lib/utils');
 const Player = require('./lib/player');
 const client = new Discord();
+const dbPath = path.join(app.getPath('userData'), 'config.db');
 
-let config = {},
-  main;
+let main;
+
+if (!utils.existsSync(dbPath)) {
+  fs.writeFileSync(dbPath, JSON.stringify({}));
+}
 
 class Main {
 
@@ -28,13 +32,7 @@ class Main {
     // debug: print userData path so we know where data files are being stored locally
     console.log(app.getPath('userData'));
 
-    // Create the nedb config db
-    this.config = new Datastore({
-      filename: path.join(app.getPath('userData'), 'config.db'),
-      autoload: true
-    });
-
-    app.config = {};
+    this.config = app.config = this.getConfig();
 
     // App event handlers
     app.on('ready', this.login.bind(this));
@@ -51,7 +49,7 @@ class Main {
       }
     });
 
-    this.player = new Player(config, this);
+    this.player = new Player(this.config, this);
 
     // Bot event handlers
     client.Dispatcher.on("GATEWAY_READY", this.onReady.bind(this));
@@ -72,17 +70,12 @@ class Main {
    * Login with token or show the token window
    */
   login() {
-    this.config.findOne({}, (err, doc) => {
-      if ((!doc || !doc.token)) {
-        return !this.tokenWindow ? this.createTokenWindow() : null;
-      }
+    if (!this.config || !this.config.token) {
+      return !this.tokenWindow ? this.createTokenWindow() : null;
+    }
 
-      this.token = doc.token;
-      client.connect({ token: this.token });
-      if (!this.mainWindow) {
-        this.createWindow();
-      }
-    });
+    client.connect({ token: this.config.token });
+    if (!this.mainWindow) this.createWindow();
   }
 
   /**
@@ -90,7 +83,7 @@ class Main {
    */
   onReady() {
     let payload = {
-      prefix: config.prefix || '+',
+      prefix: this.config.prefix || '+',
       user: {
           id: client.User.id,
           username: client.User.username,
@@ -165,7 +158,7 @@ class Main {
    */
   onMessage(event) {
     let msg = event.message;
-    const prefix = config.prefix || '+',
+    const prefix = this.config.prefix || '+',
           params = msg.content.split(' ');
 
     if (!params.join(' ').startsWith(prefix)) return;
@@ -197,9 +190,22 @@ class Main {
         this.player.remove(payload.data.guild, index);
         break;
       case 'prefix':
-        config.prefix = payload;
+        this.config.prefix = payload.data;
+        this.saveConfig();
         break;
     }
+  }
+
+  /**
+   * Get config from db
+   * @return {Object} Config object
+   */
+  getConfig() {
+    return JSON.parse(fs.readFileSync(dbPath));
+  }
+
+  saveConfig() {
+    return fs.writeFileSync(dbPath, JSON.stringify(this.config));
   }
 
   /**
@@ -208,20 +214,9 @@ class Main {
    * @param  {String} token token entered by the user
    */
   saveToken(event, token) {
-    const callback = () => {
-      this.login();
-    };
-
-    this.config.findOne({}, (err, doc) => {
-      if (!doc) {
-        app.config = {token};
-        this.config.insert({token}, callback);
-      } else {
-        doc.token = token;
-        app.config = doc;
-        this.config.update({ _id: doc._id }, doc, callback);
-      }
-    });
+    this.config.token = token;
+    this.saveConfig();
+    this.login();
   }
 
   /**
