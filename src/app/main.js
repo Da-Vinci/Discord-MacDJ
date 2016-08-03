@@ -54,7 +54,6 @@ class Main {
 
     // Bot event handlers
     client.Dispatcher.on("GATEWAY_READY", this.onReady.bind(this));
-    //client.on('error', this.onError.bind(this));
     client.Dispatcher.on('DISCONNECTED', this.onDisconnect.bind(this));
     client.Dispatcher.on("MESSAGE_CREATE", this.onMessage.bind(this));
 

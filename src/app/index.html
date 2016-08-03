@@ -45,20 +45,22 @@
                 <table class="u-full-width">
                     <tbody>
                         <tr ng-repeat="server in servers">
-                            <td ng-if="server.voiceChannel">
+                            <td ng-if="queue[server.id]">
                                 <h5>{{server.name}}</h5>
-                                <p ng-if="server.voiceChannel">
+                                <p ng-if="queue[server.id]">
                                     Channel: {{server.voiceChannel.name}}
                                 </p>
                                 <table ng-if="queue[server.id]" class="queue">
                                     <thead>
                                         <th>Name</th>
                                         <th>URL</th>
+                                        <th>Length</th>
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="song in queue[server.id]">
                                             <td>{{$index+1}}. {{song.title}}</td>
                                             <td>{{song.loaderUrl}}</td>
+                                            <td>{{betterTime(song.length_seconds)}}</td>
                                         </tr>
                                     </tbody>
                                 </table>

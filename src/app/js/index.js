@@ -10,13 +10,27 @@ let main = angular.module('mainApp', ['ngSanitize', 'scrollglue']);
 main.controller('MainController', ['$scope', '$sce', MainController]);
 main.controller('TokenController', ['$scope', TokenController]);
 
+var betterTime = function (t) {
+    var sec_num = parseInt(t, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours+':'+minutes+':'+seconds;
+}
+
 function MainController($scope, $sce) {
     $scope.trustAsHtml = $sce.trustAsHtml; // i don't trust this AAHAHAHAHAHAHAHAHA
+    $scope.betterTime = betterTime;
     $scope.client = { username: '' };
     $scope.settings = [
         {key: "Prefix", value: '<input type="text" id="prefix" value="+"></input>', format: ""},
         {key: "Default Volume", value: "100", "format": "%"}
     ];
+
     $scope.queue = {};
 
     ipcRenderer.on('ready', (event, client) => {
@@ -24,7 +38,10 @@ function MainController($scope, $sce) {
         $scope.prefix = client.prefix;
         window.$('#prefix').val(client.prefix);
         window.client = client;
-        $scope.servers = client.servers;
+        $scope.servers = client.servers.map(s => {
+            s.voiceChannel = {name: "Not Connected"};
+            return s;
+        });
         $('.overlay').remove();
         $scope.$apply();
     });
@@ -33,7 +50,7 @@ function MainController($scope, $sce) {
       console.log('voiceConnect', channel);
       $scope.servers = $scope.servers.map(s => {
         s.voiceChannel = s.voiceChannels.find(c => c.id === channel.id);
-        console.log(s);
+        if (!s.voiceChannel) s.voiceChannel = {name: "Not Connected"};
         return s;
       });
       $scope.$apply();
@@ -43,7 +60,8 @@ function MainController($scope, $sce) {
       console.log('voiceDisconnect', channel);
       $scope.servers = $scope.servers.map(s => {
         if (s.voiceChannel && s.voiceChannel.id === channel.id) {
-          delete s.voiceChannel;
+          //delete s.voiceChannel;
+          s.voiceChannel = {name: "Not Connected"};
         }
         return s;
       });
