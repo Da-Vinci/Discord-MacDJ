@@ -142,15 +142,20 @@ class Player {
    * @param  {Object} msg discord.js message resolvable
    */
   skip(msg) {
-    let voiceChannel = msg.author.getVoiceChannel(msg.guild);
+    let channel = msg.author.getVoiceChannel(msg.guild.id);
+
     // return if there's nothing in queue
     if (!this.queue[msg.guild.id]) return;
-    // stop playing
-    this.stop(voiceChannel);
-    // shift the queue
-    this.queue[msg.guild.id].push( this.queue[msg.guild.id].shift() );
-    // play the next song
-    this.play(voiceChannel);
+
+    this.getConnection(channel).then(info => {
+      var encoderStream = info.voiceConnection.getEncoderStream();
+      encoderStream.unpipeAll();
+
+      // shift the queue
+      this.queue[msg.guild.id].push( this.queue[msg.guild.id].shift() );
+      // play the next song
+      this.play(channel);
+    });
   }
 
   /**
