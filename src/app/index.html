@@ -60,7 +60,7 @@
                                         <tr ng-repeat="song in queue[server.id]">
                                             <td>{{$index+1}}. {{song.title}}</td>
                                             <td>{{song.loaderUrl}}</td>
-                                            <td>{{betterTime(song.length_seconds)}}</td>
+                                            <td>{{song.betterTime}}</td>
                                         </tr>
                                     </tbody>
                                 </table>

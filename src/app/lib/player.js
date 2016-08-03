@@ -3,6 +3,8 @@
 const ytdl = require('ytdl-core');
 const child = require('child_process');
 const Transform = require('stream').Transform;
+const utils = require('./utils');
+
 
 class Player {
 
@@ -190,6 +192,7 @@ class Player {
           return reject(err);
         }
         if (!info.video_id) return reject('No video id.');
+        info.betterTime = utils.betterTime(info.length_seconds);
         this.queue[msg.guild.id].push(info);
         this.main.mainWindow.webContents.send('queueUpdate', {
           guild: msg.guild.id,

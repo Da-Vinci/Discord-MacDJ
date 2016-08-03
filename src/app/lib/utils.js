@@ -19,6 +19,23 @@ Object.defineProperty(Array.prototype, 'group', {
 class Utils {
 
   /**
+  * Returns HH:MM:SS formatted time from seconds
+  * @param  {String}   s        seconds
+  * @return {String}   HH:MM:SS formatted string
+  */
+  betterTime (s) {
+    let sec_num = parseInt(s, 10);
+    let hours   = Math.floor(sec_num / 3600);
+    let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    let seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours+':'+minutes+':'+seconds;
+  }
+
+  /**
    * Returns files within a directory recursively
    * @param  {String}   dir      Path to directory
    * @param  {Function} callback Callback
@@ -33,7 +50,7 @@ class Utils {
     };
 
     dirs = files.filter(isDir);
-    
+
     files = files.filter(file => { return !isDir(file); });
     files = files.map(file => { return path.join(dir, file); });
 
@@ -69,7 +86,7 @@ class Utils {
   md5(data) {
     return crypto.createHash('md5').update(data).digest("hex");
   }
-  
+
   /**
    * Pad a string
    * @param {String} str string to pad
@@ -110,33 +127,6 @@ class Utils {
     return msgArrays;
   }
 
-  /**
-   * Resolve username/id/mention
-   * @param  {Object} client discord.js client
-   * @param  {Mixed} user    User to resolve
-   * @return {Object}        User resolvable
-   */
-  resolveUser(server, user) {
-    // check if it's a mention
-    let mentionId = user.match(/<@\!?[0-9]+>/g);
-    if (mentionId) return server.members.get('id', mentionId);
-    
-    // check if it's username#1337
-    if (user.indexOf('#') > -1) {
-      let [name, discrim] = user.split('#'),
-          nameDiscrimSearch = server.members.find(u => u.username === name && u.discriminator === discrim);
-      if (nameDiscrimSearch) return nameDiscrimSearch;
-    }
-
-    // check if it's an id
-    if (user.match(/^([0-9]+)$/)) {
-      let userIdSearch = server.members.get('id', user);
-      if (userIdSearch) return userIdSearch;
-    }
-
-    let userNameSearch = server.members.get('name', new RegExp(`^${user}.*`));
-    if (userNameSearch) return userNameSearch;
-  }
 
   /**
    * Convert hex color to integer
