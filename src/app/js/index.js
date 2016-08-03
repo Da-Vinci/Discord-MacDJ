@@ -17,13 +17,14 @@ function MainController($scope, $sce) {
         {key: "Prefix", value: '<input type="text" id="prefix" value="+"></input>', format: ""},
         {key: "Default Volume", value: "100", "format": "%"}
     ];
+    $scope.playlists = {};
 
     ipcRenderer.on('ready', (event, client) => {
         $scope.client = client.user;
         $scope.prefix = client.prefix;
         window.$('#prefix').val(client.prefix);
         window.client = client;
-        $scope.servers = {};
+        $scope.servers = client.servers;
         $('.overlay').remove();
         $scope.$apply();
     });
@@ -44,6 +45,9 @@ function MainController($scope, $sce) {
         return s;
       });
       $scope.$apply();
+    });
+    ipcRenderer.on('listUpdate', (event, list) => {
+        $scope.playlists[list.id] = list.list;
     });
 }
 

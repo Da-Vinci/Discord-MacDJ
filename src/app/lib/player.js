@@ -52,7 +52,7 @@ class Player {
   /**
    * Start playing the queue
    * @param  {Object} channel discord.js channel resolvable
-   * @return {Promise}        
+   * @return {Promise}
    */
   play(channel) {
     if (!this.queue[channel.guild_id]) return Promise.reject('No songs in queue.');
@@ -67,7 +67,7 @@ class Player {
         let songObj = this.queue[channel.guild_id][0],
             url = `https://www.youtube.com/watch?v=${songObj.video_id}`,
             stream = ytdl(url, { audioonly: true });
-        
+
         this.encodeStream(stream).then(data => {
           encoderStream = info.voiceConnection.getEncoderStream({
             frameDuration: 60,
@@ -86,7 +86,7 @@ class Player {
             } else this.queue[channel.guild_id].shift();
           });
         }).catch(err => console.error(err));
-        
+
         return resolve();
       }).catch(reject);
     });
