@@ -12,7 +12,7 @@ main.controller('TokenController', ['$scope', TokenController]);
 
 function MainController($scope, $sce) {
     $scope.trustAsHtml = $sce.trustAsHtml; // i don't trust this AAHAHAHAHAHAHAHAHA
-    $scope.bot = { username: '' };
+    $scope.client = { username: '' };
     $scope.settings = [
         {key: "Prefix", value: '<input type="text" id="prefix" value="+"></input>', format: ""},
         {key: "Default Volume", value: "100", "format": "%"}

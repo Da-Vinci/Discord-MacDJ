@@ -89,7 +89,11 @@ class Main {
   onReady() {
     let payload = {
       prefix: config.prefix,
-      user: client.User,
+      user: {
+          id: client.User.id,
+          username: client.User.username,
+          discriminator: client.User.discriminator
+      },
       users: client.Users,
       servers: client.Guilds.map(s => {
         return {
