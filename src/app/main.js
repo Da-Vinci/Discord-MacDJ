@@ -232,8 +232,6 @@ class Main {
     this.tokenWindow = new BrowserWindow({width: 670, height: 140});
     this.tokenWindow.loadURL('file://' + __dirname + '/token.html');
 
-    Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
-
     // Register the event listener to save token
     ipcMain.on('token', this.saveToken.bind(this));
   }
