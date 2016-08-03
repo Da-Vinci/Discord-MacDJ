@@ -27,12 +27,14 @@ class Player {
    * @return {Promise}        Resolves a connection object
    */
   getConnection(channel) {
-    const connection = this.connections.get(channel.guild_id);
-    if (connection) return Promise.resolve(connection);
+    if (this.client.voiceConnections) {
+      const info = this.client.voiceConnections.getForGuild(channel.guild_id);
+      if (info) return Promise.resolve(info);
+    }
 
     return new Promise((resolve, reject) => {
-      channel.join(false, false).then(connection => {
-        this.connections.set(channel.guild_id, connection);
+      channel.join(false, false).then(info => {
+        // this.connections.set(channel.guild_id, info);
 
         this.main.mainWindow.webContents.send('voiceConnect', {
           id: channel.id,
@@ -42,7 +44,7 @@ class Player {
           user_limit: channel.user_limit
         });
 
-        return resolve(connection);
+        return resolve(info);
       }).catch(reject);
     });
   }
@@ -87,8 +89,6 @@ class Player {
 
         if(!bestaudio) return;
 
-        console.log(bestaudio.url);
-
         let encoder = info.voiceConnection.createExternalEncoder({
             type: 'ffmpeg',
             format: 'opus',
@@ -97,16 +97,18 @@ class Player {
             debug: false
         });
 
-        encoder.on('error', err => console.error(err));
+        encoder.play();
 
-        encoder.once('end', () => {
+        let encoderStream = info.voiceConnection.getEncoderStream();
+
+        encoderStream.on('error', err => console.error(err));
+        encoderStream.once('end', () => {
           if (this.queue.length > 1) {
             this.queue[channel.guild_id].push( this.queue[channel.guild_id].shift() );
             this.play.call(this, channel);
           } else this.queue[channel.guild_id].shift();
         });
 
-        encoder.play();
 
         return resolve();
       }).catch(reject);
@@ -119,11 +121,10 @@ class Player {
    */
   stop(channel) {
     this.getConnection(channel).then(info => {
-      let encoderStream = info.voiceConnection.getEncoderStream();
-
-      if (!encoderStream) return;
+      var encoderStream = info.voiceConnection.getEncoderStream();
 
       encoderStream.unpipeAll();
+      info.voiceConnection.disconnect();
       channel.leave();
 
       this.main.mainWindow.webContents.send('voiceDisconnect', {
