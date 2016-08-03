@@ -1,8 +1,6 @@
 "use strict";
 
 const ytdl = require('ytdl-core');
-const child = require('child_process');
-const Transform = require('stream').Transform;
 
 class Player {
 

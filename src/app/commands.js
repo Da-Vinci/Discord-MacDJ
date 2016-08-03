@@ -99,7 +99,7 @@ commands.set('ping', {
     description: 'ping pong ping pong',
     execute: function(msg) {
         let start = process.hrtime();
-        msg.channel.sendMessage('pong').then((message, err) => {
+        msg.channel.sendMessage('pong').then((message) => {
             let diff = Math.round(process.hrtime(start)[1]/1000000);
             message.edit("pong `"+diff+"ms`");
         });
