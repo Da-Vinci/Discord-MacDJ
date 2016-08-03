@@ -94,4 +94,16 @@ commands.set('resume', {
   }
 });
 
+commands.set('ping', {
+    name: 'ping',
+    description: 'ping pong ping pong',
+    execute: function(msg) {
+        let start = process.hrtime();
+        msg.channel.sendMessage('pong').then((message, err) => {
+            let diff = Math.round(process.hrtime(start)[1]/1000000);
+            message.edit("pong `"+diff+"ms`");
+        });
+    }
+})
+
 module.exports = commands;
