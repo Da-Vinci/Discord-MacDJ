@@ -167,7 +167,7 @@ class Player {
     // remove the first song if there's no index
     if (!index) return this.queue[msg.guild.id].shift();
     // remove the item by index
-    this.queue[msg.guild.id].splice(--index, 1);
+    return this.queue[msg.guild.id].splice(--index, 1).shift();
   }
 
   /**

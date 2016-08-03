@@ -49,7 +49,7 @@ commands.set('remove', {
     if (msg.channel.isPrivate) return msg.channel.sendMessage("You must be in the channel to use this.");
 
     const result = this.player.remove(msg, index);
-    this.sendMessage(`Removed ${result.title}`);
+    msg.channel.sendMessage(`Removed ${result.title}`);
   }
 })
 
