@@ -51,12 +51,15 @@ class Main {
       }
     });
 
+    this.player = new Player(config, this);
+
     // Bot event handlers
     client.Dispatcher.on("GATEWAY_READY", this.onReady.bind(this));
     client.Dispatcher.on('DISCONNECTED', this.onDisconnect.bind(this));
     client.Dispatcher.on("MESSAGE_CREATE", this.onMessage.bind(this));
 
-    this.player = new Player(config, this);
+    // UI event handlers
+    ipcMain.on('command', this.onCommand.bind(this));
 
     return this;
   }
@@ -180,7 +183,24 @@ class Main {
 
     // execute command
     command.execute.call(this, msg, args);
+  }
+
+  /**
+   * UI Command handler
+   * @param  {Object} event   ipc event
+   * @param  {Object} payload payload object
+   */
+  onCommand(event, payload) {
+    switch (payload.command) {
+      case 'queueDelete':
+        var index = parseInt(payload.data.index, 10) + 1;
+        this.player.remove(payload.data.guild, index);
+        break;
+      case 'prefix':
+        config.prefix = payload;
+        break;
     }
+  }
 
   /**
    * Save the token for logging in

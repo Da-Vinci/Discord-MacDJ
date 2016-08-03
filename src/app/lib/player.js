@@ -217,18 +217,18 @@ class Player {
    * @param  {Object} msg   discord.js message resolvable
    * @param  {Number} index Index of song to remove
    */
-  remove(msg, index) {
+  remove(guildId, index) {
     let result;
 
     // return if there's nothing in queue
-    if (!this.queue[msg.guild.id]) return;
+    if (!this.queue[guildId]) return;
     // remove the first song if there's no index
-    if (!index) result = this.queue[msg.guild.id].shift();
-    else result = this.queue[msg.guild.id].splice(--index, 1).shift();
+    if (!index) result = this.queue[guildId].shift();
+    else result = this.queue[guildId].splice(--index, 1).shift();
 
     this.main.mainWindow.webContents.send('queueUpdate', {
-      guild: msg.guild.id,
-      queue: this.queue[msg.guild.id]
+      guild: guildId,
+      queue: this.queue[guildId]
     });
 
     return result;

@@ -46,7 +46,7 @@ commands.set('remove', {
   execute: function (msg, args) {
     let index = (args.length && !isNaN(parseInt(args[0], 10))) ? args[0] : 1;
 
-    const result = this.player.remove(msg, index);
+    const result = this.player.remove(msg.guild.id, index);
     msg.channel.sendMessage(`Removed ${result.title}`);
   }
 })
