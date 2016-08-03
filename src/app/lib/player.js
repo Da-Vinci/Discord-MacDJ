@@ -33,7 +33,15 @@ class Player {
     return new Promise((resolve, reject) => {
       channel.join(false, false).then(connection => {
         this.connections.set(channel.guild_id, connection);
-        this.main.mainWindow.webContents.send('voiceConnect', channel);
+        
+        this.main.mainWindow.webContents.send('voiceConnect', {
+          id: channel.id,
+          name: channel.name,
+          guild_id: channel.guild_id,
+          bitrate: channel.bitrate,
+          user_limit: channel.user_limit
+        });
+
         return resolve(connection);
       }).catch(reject);
     });
@@ -48,7 +56,14 @@ class Player {
     this.getConnection(channel).then(info => {
       info.disconnect();
       channel.leave();
-      this.main.mainWindow.webContents.send('voiceDisconnect', channel);
+
+      this.main.mainWindow.webContents.send('voiceDisconnect', {
+        id: channel.id,
+        name: channel.name,
+        guild_id: channel.guild_id,
+        bitrate: channel.bitrate,
+        user_limit: channel.user_limit
+      });
     });
   }
 
@@ -62,32 +77,84 @@ class Player {
 
     return new Promise((resolve, reject) => {
       this.getConnection(channel).then(info => {
+        let mediaInfo = this.queue[channel.guild_id][0];
+
+        let formats = mediaInfo.formats
+          .filter(f => f.container === 'webm')
+          .sort((a, b) => b.audioBitrate - a.audioBitrate);
+        let bestaudio = formats.find(f => f.audioBitrate > 0 && !f.bitrate) ||
+                        formats.find(f => f.audioBitrate > 0);
+
+        if(!bestaudio) return;
+
+        console.log(bestaudio.url);
+            
+        let encoder = info.voiceConnection.createExternalEncoder({
+            type: 'ffmpeg',
+            format: 'opus',
+            source: bestaudio.url,
+            frameDuration: 60,
+            debug: false
+        });
+
+        encoder.on('error', err => console.error(err));
+
+        encoder.once('end', () => {
+          if (this.queue.length > 1) {
+            this.queue[channel.guild_id].push( this.queue[channel.guild_id].shift() );
+            this.play.call(this, channel);
+          } else this.queue[channel.guild_id].shift();
+        });
+
+        encoder.play();
+
+        return resolve();
+      }).catch(reject);
+    });
+  }
+
+  /**
+   * Start playing the queue
+   * @param  {Object} channel discord.js channel resolvable
+   * @return {Promise}
+   */
+  playO(channel) {
+    if (!this.queue[channel.guild_id]) return Promise.reject('No songs in queue.');
+
+    return new Promise((resolve, reject) => {
+      this.getConnection(channel).then(info => {
         let encoderStream = info.voiceConnection.getEncoderStream();
-        if (encoderStream) {
-          encoderStream.unpipeAll();
-        }
+
+        if (encoderStream) encoderStream.unpipeAll();
 
         let songObj = this.queue[channel.guild_id][0],
             url = `https://www.youtube.com/watch?v=${songObj.video_id}`,
             stream = ytdl(url, { audioonly: true });
 
+        console.log(stream);
+
         this.encodeStream(stream).then(data => {
+          console.log(data);
           encoderStream = info.voiceConnection.getEncoderStream({
             frameDuration: 60,
             sampleRate: 48000,
             channels: 2
           });
 
+          encoderStream.on('unpipe', () => data.stream.destroy());
+
           data.stream.on('error', console.error);
-
-          data.stream.pipe(encoderStream);
-
           data.stream.once('end', () => {
+            if (encoderStream) encoderStream.unpipeAll();
+
             if (this.queue.length > 1) {
               this.queue[channel.guild_id].push( this.queue[channel.guild_id].shift() );
               this.play.call(this, channel);
             } else this.queue[channel.guild_id].shift();
           });
+
+          data.stream.pipe(encoderStream);
+
         }).catch(err => console.error(err));
 
         return resolve();
@@ -102,10 +169,19 @@ class Player {
   stop(channel) {
     this.getConnection(channel).then(info => {
       let encoderStream = info.voiceConnection.getEncoderStream();
+
       if (!encoderStream) return;
+
       encoderStream.unpipeAll();
-      this.main.mainWindow.webContents.send('voiceDisconnect', channel);
       channel.leave();
+      
+      this.main.mainWindow.webContents.send('voiceDisconnect', {
+        id: channel.id,
+        name: channel.name,
+        guild_id: channel.guild_id,
+        bitrate: channel.bitrate,
+        user_limit: channel.user_limit
+      });
     });
   }
 

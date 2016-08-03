@@ -175,6 +175,8 @@ class Main {
     if (cmd === 'help') return this.generateHelp(msg, args);
     if (!this.commands.has(cmd)) return;
 
+    if (msg.channel.is_private) return msg.channel.sendMessage('You should be in a channel to use commands.');
+
     const command = this.commands.get(cmd);
 
     // execute command

@@ -46,8 +46,6 @@ commands.set('remove', {
   execute: function (msg, args) {
     let index = (args.length && !isNaN(parseInt(args[0], 10))) ? args[0] : 1;
 
-    if (msg.channel.isPrivate) return msg.channel.sendMessage("You must be in the channel to use this.");
-
     const result = this.player.remove(msg, index);
     msg.channel.sendMessage(`Removed ${result.title}`);
   }
