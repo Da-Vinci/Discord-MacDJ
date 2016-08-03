@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "discordie": "github:Bots-js/discordie#macdj",
-    "moment": "^2.11.2",
     "ytdl-core": "^0.7.17"
   },
   "devDependencies": {
