@@ -17,7 +17,7 @@ function MainController($scope, $sce) {
         {key: "Prefix", value: '<input type="text" id="prefix" value="+"></input>', format: ""},
         {key: "Default Volume", value: "100", "format": "%"}
     ];
-    $scope.playlists = {};
+    $scope.queue = {};
 
     ipcRenderer.on('ready', (event, client) => {
         $scope.client = client.user;
@@ -30,9 +30,10 @@ function MainController($scope, $sce) {
     });
 
     ipcRenderer.on('voiceConnect', (event, channel) => {
-      console.log('voiceConnect');
+      console.log('voiceConnect', channel);
       $scope.servers = $scope.servers.map(s => {
         s.voiceChannel = s.voiceChannels.find(c => c.id === channel.id);
+        console.log(s);
         return s;
       });
       $scope.$apply();
@@ -50,11 +51,7 @@ function MainController($scope, $sce) {
     });
 
     ipcRenderer.on('queueUpdate', (event, data) => {
-      console.log('queueUpdate', data.guild);
-    });
-    
-    ipcRenderer.on('listUpdate', (event, list) => {
-        $scope.playlists[list.id] = list.list;
+      console.log('queueUpdate', data);
     });
 }
 

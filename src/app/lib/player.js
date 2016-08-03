@@ -33,7 +33,7 @@ class Player {
     return new Promise((resolve, reject) => {
       channel.join(false, false).then(connection => {
         this.connections.set(channel.guild_id, connection);
-        
+
         this.main.mainWindow.webContents.send('voiceConnect', {
           id: channel.id,
           name: channel.name,
@@ -88,7 +88,7 @@ class Player {
         if(!bestaudio) return;
 
         console.log(bestaudio.url);
-            
+
         let encoder = info.voiceConnection.createExternalEncoder({
             type: 'ffmpeg',
             format: 'opus',
@@ -174,7 +174,7 @@ class Player {
 
       encoderStream.unpipeAll();
       channel.leave();
-      
+
       this.main.mainWindow.webContents.send('voiceDisconnect', {
         id: channel.id,
         name: channel.name,
