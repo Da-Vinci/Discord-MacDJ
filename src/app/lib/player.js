@@ -80,8 +80,10 @@ class Player {
           data.stream.pipe(encoderStream);
 
           data.stream.once('end', () => {
-            this.queue[channel.guild_id].push( this.queue[channel.guild_id].shift() );
-            this.play.call(this, channel);
+            if (this.queue.length > 1) {
+              this.queue[channel.guild_id].push( this.queue[channel.guild_id].shift() );
+              this.play.call(this, channel);
+            } else this.queue[channel.guild_id].shift();
           });
         }).catch(err => console.error(err));
         
