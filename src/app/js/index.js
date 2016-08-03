@@ -46,6 +46,7 @@ function MainController($scope, $sce) {
       });
       $scope.$apply();
     });
+    
     ipcRenderer.on('listUpdate', (event, list) => {
         $scope.playlists[list.id] = list.list;
     });
