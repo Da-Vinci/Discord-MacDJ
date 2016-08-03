@@ -158,7 +158,7 @@ class Player {
         }
         if (!info.video_id) return reject('No video id.');
         this.queue[msg.guild.id].push(info);
-        this.mainWindow.webContents.send('queueUpdate', {
+        this.main.mainWindow.webContents.send('queueUpdate', {
           guild: msg.guild.id,
           queue: this.queue[msg.guild.id]
         });
@@ -174,14 +174,14 @@ class Player {
    */
   remove(msg, index) {
     let result;
-    
+
     // return if there's nothing in queue
     if (!this.queue[msg.guild.id]) return;
     // remove the first song if there's no index
     if (!index) result = this.queue[msg.guild.id].shift();
     else result = this.queue[msg.guild.id].splice(--index, 1).shift();
 
-    this.mainWindow.webContents.send('queueUpdate', {
+    this.main.mainWindow.webContents.send('queueUpdate', {
       guild: msg.guild.id,
       queue: this.queue[msg.guild.id]
     });
@@ -204,7 +204,7 @@ class Player {
    */
   clear(msg) {
     this.queue[msg.guild.id] = [];
-    this.mainWindow.webContents.send('queueUpdate', {
+    this.main.mainWindow.webContents.send('queueUpdate', {
       guild: msg.guild.id,
       queue: this.queue[msg.guild.id]
     });
