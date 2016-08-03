@@ -153,6 +153,12 @@ class Player {
 
       // shift the queue
       this.queue[msg.guild.id].push( this.queue[msg.guild.id].shift() );
+
+      this.main.mainWindow.webContents.send('queueUpdate', {
+        guild: msg.guild.id,
+        queue: this.queue[msg.guild.id]
+      });
+
       // play the next song
       this.play(channel);
     });
@@ -189,12 +195,16 @@ class Player {
           console.error(err);
           return reject(err);
         }
+
         if (!info.video_id) return reject('No video id.');
+
         this.queue[msg.guild.id].push(info);
+
         this.main.mainWindow.webContents.send('queueUpdate', {
           guild: msg.guild.id,
           queue: this.queue[msg.guild.id]
         });
+
         resolve(info);
       });
     });
