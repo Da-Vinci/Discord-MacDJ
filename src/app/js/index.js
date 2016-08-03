@@ -76,7 +76,7 @@ function applyJS() {
         if (e.which == 13) {
             if ($(this).val().length < 33) {
                 console.log($(this).val())
-                ipcRenderer.send('prefix', $(this).val())
+                ipcRenderer.send('command', {command: 'prefix', data: $(this).val()});
             }
             return false;
         }

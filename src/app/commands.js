@@ -53,7 +53,7 @@ commands.set('remove', {
 
 commands.set('play', {
   name: 'play',
-  description: 'Play a song.',
+  description: 'Play the current queue',
   execute: function (msg) {
     let voiceChannel = msg.author.getVoiceChannel(msg.guild);
     if (!voiceChannel) return msg.channel.sendMessage('You should be in a voice channel first.');
