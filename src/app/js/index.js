@@ -59,6 +59,11 @@ function MainController($scope, $sce) {
       console.log('queueUpdate', data)
       $scope.queue[data.guild] = data.queue;
       $scope.$apply();
+      $('.delete').on('click', function() {
+          let command = {command: 'queueDelete', data: {index: $(this).attr('index'), guild: $(this).attr('guild')}};
+          console.log(command);
+          ipcRenderer.send('command', command);
+      });
     });
 }
 
