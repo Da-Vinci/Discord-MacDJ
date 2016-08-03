@@ -187,7 +187,10 @@ class Player {
    * @param {Object} songObj Youtube song object
    */
   add(msg, url) {
+    url = url.replace('/<|>/g', '');
+    
     this.queue[msg.guild.id] = this.queue[msg.guild.id] || [];
+
     return new Promise((resolve, reject) => {
       ytdl.getInfo(url, (err, info) => {
         if (err) {
