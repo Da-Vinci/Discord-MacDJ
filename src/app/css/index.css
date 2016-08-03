@@ -53,6 +53,11 @@ thead {
     font-weight: 400;
 }
 
+
+.queue td {
+    border: 0px;
+}
+
 left {
     float: left;
 }

@@ -40,7 +40,7 @@ function MainController($scope, $sce) {
     });
 
     ipcRenderer.on('voiceDisconnect', (event, channel) => {
-      console.log('voiceDisconnect');
+      console.log('voiceDisconnect', channel);
       $scope.servers = $scope.servers.map(s => {
         if (s.voiceChannel && s.voiceChannel.id === channel.id) {
           delete s.voiceChannel;
@@ -51,7 +51,9 @@ function MainController($scope, $sce) {
     });
 
     ipcRenderer.on('queueUpdate', (event, data) => {
-      console.log('queueUpdate', data);
+      console.log('queueUpdate', data)
+      $scope.queue[data.guild] = data.queue;
+      $scope.$apply();
     });
 }
 
