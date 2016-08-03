@@ -22,7 +22,8 @@ commands.set('list', {
 
     msgArray.push('```');
     for (let i in list) {
-      msgArray.push(`${++i}: ${list[i].title}`);
+      let info = list[i];
+      msgArray.push(`${++i}: ${info.title}`);
     }
     msgArray.push('```');
 
