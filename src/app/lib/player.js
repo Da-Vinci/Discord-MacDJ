@@ -6,8 +6,9 @@ const Transform = require('stream').Transform;
 
 class Player {
 
-  constructor(config) {
+  constructor(config, main) {
     this.config = config;
+    this.main = main;
   }
 
   /**
@@ -32,6 +33,7 @@ class Player {
     return new Promise((resolve, reject) => {
       channel.join(false, false).then(connection => {
         this.connections.set(channel.guild_id, connection);
+        this.main.mainWindow.webContents.send('voiceConnect', channel);
         return resolve(connection);
       }).catch(reject);
     });
@@ -43,9 +45,10 @@ class Player {
    * @return {Promise}        Resolves when done.
    */
   destroyConnection(channel) {
-    this.getConnection(channel).then(connection => {
-      connection.disconnect();
+    this.getConnection(channel).then(info => {
+      info.disconnect();
       channel.leave();
+      this.main.mainWindow.webContents.send('voiceDisconnect', channel);
     });
   }
 
@@ -101,6 +104,8 @@ class Player {
       let encoderStream = info.voiceConnection.getEncoderStream();
       if (!encoderStream) return;
       encoderStream.unpipeAll();
+      this.main.mainWindow.webContents.send('voiceDisconnect', channel);
+      channel.leave();
     });
   }
 
@@ -121,6 +126,7 @@ class Player {
   }
 
   /**
+   * NOT FUNCTIONAL
    * Pause song
    * @param  {Object} msg discord.js message resolvable
    */
@@ -129,6 +135,7 @@ class Player {
   }
 
   /**
+   * NOT FUNCTIONAL
    * Resume song
    * @param  {Object} msg discord.js message resolvable
    */
@@ -151,6 +158,10 @@ class Player {
         }
         if (!info.video_id) return reject('No video id.');
         this.queue[msg.guild.id].push(info);
+        this.mainWindow.webContents.send('queueUpdate', {
+          guild: msg.guild.id,
+          queue: this.queue[msg.guild.id]
+        });
         resolve(info);
       });
     });
@@ -165,9 +176,15 @@ class Player {
     // return if there's nothing in queue
     if (!this.queue[msg.guild.id]) return;
     // remove the first song if there's no index
-    if (!index) return this.queue[msg.guild.id].shift();
-    // remove the item by index
-    return this.queue[msg.guild.id].splice(--index, 1).shift();
+    if (!index) result this.queue[msg.guild.id].shift();
+    else result = this.queue[msg.guild.id].splice(--index, 1).shift();
+
+    this.mainWindow.webContents.send('queueUpdate', {
+      guild: msg.guild.id,
+      queue: this.queue[msg.guild.id]
+    });
+
+    return result;
   }
 
   /**
@@ -184,10 +201,15 @@ class Player {
    * @param  {Object} msg discord.js message resolvable
    */
   clear(msg) {
-    return this.queue[msg.guild.id] = [];
+    this.queue[msg.guild.id] = [];
+    this.mainWindow.webContents.send('queueUpdate', {
+      guild: msg.guild.id,
+      queue: this.queue[msg.guild.id]
+    });
   }
 
   /**
+   * NOT FUNCTIONAL
    * Set volume to play in discord
    * @param  {Object} channel discord.js channel resolvable
    * @param  {Float} volume   Volume level (0-1.5)

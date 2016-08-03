@@ -57,7 +57,7 @@ class Main {
     client.Dispatcher.on('DISCONNECTED', this.onDisconnect.bind(this));
     client.Dispatcher.on("MESSAGE_CREATE", this.onMessage.bind(this));
 
-    this.player = new Player(config);
+    this.player = new Player(config, this);
 
     return this;
   }
