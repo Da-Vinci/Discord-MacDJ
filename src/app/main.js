@@ -73,8 +73,8 @@ class Main {
    */
   login() {
     this.config.findOne({}, (err, doc) => {
-      if (!doc || !doc.token) {
-        return this.createTokenWindow();
+      if ((!doc || !doc.token)) {
+        return !this.tokenWindow ? this.createTokenWindow() : null;
       }
 
       this.token = doc.token;
@@ -210,7 +210,6 @@ class Main {
   saveToken(event, token) {
     const callback = () => {
       this.login();
-      if (this.tokenWindow) this.tokenWindow.close();
     };
 
     this.config.findOne({}, (err, doc) => {
@@ -229,7 +228,11 @@ class Main {
    * Create the token window
    */
   createTokenWindow() {
-    this.tokenWindow = new BrowserWindow({width: 670, height: 140});
+    let width = process.platform === "win32" ? 700 : 670,
+        height = process.platform === "win32" ? 160 : 140;
+
+    this.tokenWindow = new BrowserWindow({width: width, height: height});
+    this.tokenWindow.setMenu(null);
     this.tokenWindow.loadURL('file://' + __dirname + '/token.html');
 
     // Register the event listener to save token
@@ -254,6 +257,8 @@ class Main {
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
 
     app.mainWindow = this.mainWindow;
+
+    if (this.tokenWindow) this.tokenWindow.close();
   }
 }
 
