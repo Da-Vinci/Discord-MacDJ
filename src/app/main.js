@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const os = require('os');
 const Datastore = require('nedb');
 const electron = require('electron');
 const Discord = require('discordie');

@@ -1,10 +1,13 @@
 "use strict";
 
 const ytdl = require('ytdl-core');
+<<<<<<< HEAD
 const child = require('child_process');
 const Transform = require('stream').Transform;
 const utils = require('./utils');
 
+=======
+>>>>>>> 399b774e3af7a2ccdabdec430179d9d5b5089aff
 
 class Player {
 
@@ -155,6 +158,12 @@ class Player {
 
       // shift the queue
       this.queue[msg.guild.id].push( this.queue[msg.guild.id].shift() );
+
+      this.main.mainWindow.webContents.send('queueUpdate', {
+        guild: msg.guild.id,
+        queue: this.queue[msg.guild.id]
+      });
+
       // play the next song
       this.play(channel);
     });
@@ -191,13 +200,16 @@ class Player {
           console.error(err);
           return reject(err);
         }
+
         if (!info.video_id) return reject('No video id.');
         info.betterTime = utils.betterTime(info.length_seconds);
         this.queue[msg.guild.id].push(info);
+
         this.main.mainWindow.webContents.send('queueUpdate', {
           guild: msg.guild.id,
           queue: this.queue[msg.guild.id]
         });
+
         resolve(info);
       });
     });
