@@ -209,7 +209,7 @@ class Main {
    * Create the token window
    */
   createTokenWindow() {
-    this.tokenWindow = new BrowserWindow({width: 670, height: 120});
+    this.tokenWindow = new BrowserWindow({width: 670, height: 140});
     this.tokenWindow.loadURL('file://' + __dirname + '/token.html');
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
