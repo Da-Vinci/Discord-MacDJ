@@ -97,9 +97,10 @@ class Player {
    * @param  {Object} channel discord.js channel resolvable
    */
   stop(channel) {
-    this.getConnection(channel).then(connection => {
-      if (connection.playingIntent) connection.playingIntent.removeAllListeners('end');
-      connection.stopPlaying();
+    this.getConnection(channel).then(info => {
+      let encoderStream = info.voiceConnection.getEncoderStream();
+      if (!encoderStream) return;
+      encoderStream.unpipeAll();
     });
   }
 
@@ -108,14 +109,15 @@ class Player {
    * @param  {Object} msg discord.js message resolvable
    */
   skip(msg) {
+    let voiceChannel = msg.author.getVoiceChannel(msg.guild);
     // return if there's nothing in queue
-    if (!this.queue[msg.server.id]) return;
+    if (!this.queue[msg.guild.id]) return;
     // stop playing
-    this.stop(msg.author.voiceChannel);
+    this.stop(voiceChannel);
     // shift the queue
-    this.queue[msg.server.id].push( this.queue[msg.server.id].shift() );
+    this.queue[msg.guild.id].push( this.queue[msg.guild.id].shift() );
     // play the next song
-    this.play(msg.author.voiceChannel);
+    this.play(voiceChannel);
   }
 
   /**

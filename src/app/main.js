@@ -88,7 +88,7 @@ class Main {
    */
   onReady() {
     let payload = {
-      prefix: config.prefix,
+      prefix: config.prefix || '+',
       user: {
           id: client.User.id,
           username: client.User.username,
@@ -154,7 +154,7 @@ class Main {
     }
     msgArray.push('```');
 
-    client.sendMessage(msg.channel, msgArray);
+    msg.channel.sendMessage(msgArray.join("\n"));
   }
 
   /**
