@@ -1,7 +1,7 @@
 {
   "name": "Discord-MacDJ",
   "productName": "Discord-MacDJ",
-  "version": "0.3.0",
+  "version": "0.8.0",
   "license": "MIT",
   "homepage": "https://github.com/Bots-js/Discord-MacDJ",
   "repository": {
@@ -16,7 +16,6 @@
     "start": "electron index.js"
   },
   "dependencies": {
-    "discord.js": "github:hydrabolt/discord.js#indev",
     "discordie": "github:qeled/discordie#dev",
     "moment": "^2.11.2",
     "nedb": "^1.8.0",
