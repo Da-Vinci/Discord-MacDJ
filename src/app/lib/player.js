@@ -100,6 +100,8 @@ class Player {
 
         let encoderStream = info.voiceConnection.getEncoderStream();
 
+        this.client.User.setStatus("online", {name: mediaInfo.title});
+
         encoderStream.on('error', err => console.error(err));
         encoderStream.once('end', () => {
           if (this.queue.length > 1) {
@@ -188,7 +190,7 @@ class Player {
    */
   add(msg, url) {
     url = url.replace('/<|>/g', '');
-    
+
     this.queue[msg.guild.id] = this.queue[msg.guild.id] || [];
 
     return new Promise((resolve, reject) => {

@@ -103,6 +103,8 @@ class Main {
 
     this.player.start(client);
 
+    client.User.setStatus("online", {name: "Music"});
+
     this.mainWindow.webContents.send('ready', payload);
   }
 
