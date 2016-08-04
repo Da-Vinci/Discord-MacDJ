@@ -69,9 +69,17 @@ function applyJS() {
     let volume = $('#volume');
     let prefix = $('#prefix');
     let del = $('.delete');
+    let add = $('.addButton');
     volume.unbind();
     prefix.unbind();
     del.unbind();
+    add.unbind();
+    add.on('click', function() {
+        let url = $(this).closest(".addDiv").find("input").val();
+        let guild = $(this).closest(".addDiv").find("input").attr("guild");
+        let vc = $(this).closest(".addDiv").find("input").attr("vc");
+        ipcRenderer.send('command', {command: 'add', data: {url: url, guild: guild, vc: vc}});
+    });
     volume.on('input', function() {
         console.log($(this).val());
     });

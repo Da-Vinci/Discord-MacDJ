@@ -58,6 +58,10 @@ thead {
     border: 0px;
 }
 
+.add {
+    width: 100%;
+}
+
 left {
     float: left;
 }
