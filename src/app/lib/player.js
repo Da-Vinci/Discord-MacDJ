@@ -211,11 +211,9 @@ class Player {
           queue: this.queue[msg.guild.id]
         });
 
-        this.getConnection(voiceChannel).then(info => {
-          if (!this.getPlayingState(voiceChannel)) {
-            this.play(voiceChannel);
-          }
-        });
+        if (!this.getPlayingState(voiceChannel)) {
+          this.play(voiceChannel);
+        }
 
         resolve(info);
       });
