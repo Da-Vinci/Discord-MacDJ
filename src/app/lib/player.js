@@ -120,7 +120,7 @@ class Player {
    */
   stop(channel) {
     this.getConnection(channel).then(info => {
-      var encoderStream = info.voiceConnection.getEncoderStream();
+      let encoderStream = info.voiceConnection.getEncoderStream();
 
       encoderStream.unpipeAll();
       info.voiceConnection.disconnect();
@@ -147,7 +147,7 @@ class Player {
     if (!this.queue[msg.guild.id]) return;
 
     this.getConnection(channel).then(info => {
-      var encoderStream = info.voiceConnection.getEncoderStream();
+      let encoderStream = info.voiceConnection.getEncoderStream();
       encoderStream.unpipeAll();
 
       // shift the queue
@@ -186,7 +186,7 @@ class Player {
    * @param {Object} msg     discord.js message resolvable
    * @param {Object} songObj Youtube song object
    */
-  add(msg, url) {
+  add(msg, voiceChannel, url) {
     url = url.replace('/<|>/g', '');
     
     this.queue[msg.guild.id] = this.queue[msg.guild.id] || [];
@@ -205,6 +205,11 @@ class Player {
         this.main.mainWindow.webContents.send('queueUpdate', {
           guild: msg.guild.id,
           queue: this.queue[msg.guild.id]
+        });
+
+        this.getConnection(voiceChannel).then(info => {
+          let encoderStream = info.voiceConnection.getEncoderStream();
+          if (!encoderStream) this.play(voiceChannel);
         });
 
         resolve(info);
