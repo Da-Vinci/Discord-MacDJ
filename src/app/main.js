@@ -232,8 +232,11 @@ class Main {
         height = process.platform === "win32" ? 160 : 140;
 
     this.tokenWindow = new BrowserWindow({width: width, height: height});
-    this.tokenWindow.setMenu(null);
+    // this.tokenWindow.setMenu(null);
     this.tokenWindow.loadURL('file://' + __dirname + '/token.html');
+
+    // create the client menu
+    Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
 
     // Register the event listener to save token
     ipcMain.on('token', this.saveToken.bind(this));
