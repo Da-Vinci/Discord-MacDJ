@@ -17,6 +17,7 @@ class Player {
   start(client) {
     this.client = client;
     this.connections = new Map();
+    this.playing = new Map();
     this.queue = this.config.queue = {};
   }
 
@@ -31,21 +32,21 @@ class Player {
       if (info) return Promise.resolve(info);
     }
 
-    return new Promise((resolve, reject) => {
-      channel.join(false, false).then(info => {
+    return channel.join(false, false)
+      .then((info) => {
         // this.connections.set(channel.guild_id, info);
-
         this.main.mainWindow.webContents.send('voiceConnect', {
           id: channel.id,
           name: channel.name,
           guild_id: channel.guild_id,
           bitrate: channel.bitrate,
           user_limit: channel.user_limit
+
+
         });
 
-        return resolve(info);
-      }).catch(reject);
-    });
+        return info;
+      })
   }
 
   /**
@@ -75,45 +76,38 @@ class Player {
    */
   play(channel) {
     if (!this.queue[channel.guild_id]) return Promise.reject('No songs in queue.');
+    return this.getConnection(channel).then(info => {
+      let mediaInfo = this.queue[channel.guild_id][0];
+      let formats = mediaInfo.formats
+        .filter(f => f.container === 'webm')
+        .sort((a, b) => b.audioBitrate - a.audioBitrate);
+      let bestaudio = formats.find(f => f.audioBitrate > 0 && !f.bitrate) ||
+        formats.find(f => f.audioBitrate > 0);
+      if (!bestaudio) return;
+      this.playing.set(channel.id, true);
 
-    return new Promise((resolve, reject) => {
-      this.getConnection(channel).then(info => {
-        let mediaInfo = this.queue[channel.guild_id][0];
+      let encoder = info.voiceConnection.createExternalEncoder({
+        type: 'ffmpeg',
+        format: 'opus',
+        source: bestaudio.url,
+        frameDuration: 60,
+        debug: false
+      });
 
-        let formats = mediaInfo.formats
-          .filter(f => f.container === 'webm')
-          .sort((a, b) => b.audioBitrate - a.audioBitrate);
-        let bestaudio = formats.find(f => f.audioBitrate > 0 && !f.bitrate) ||
-                        formats.find(f => f.audioBitrate > 0);
+      let encoderStream = encoder.play();
 
-        if(!bestaudio) return;
+      this.client.User.setStatus("online", {name: mediaInfo.title});
 
-        let encoder = info.voiceConnection.createExternalEncoder({
-            type: 'ffmpeg',
-            format: 'opus',
-            source: bestaudio.url,
-            frameDuration: 60,
-            debug: false
-        });
-
-        encoder.play();
-
-        let encoderStream = info.voiceConnection.getEncoderStream();
-
-        this.client.User.setStatus("online", {name: mediaInfo.title});
-
-        encoderStream.on('error', err => console.error(err));
-        encoderStream.once('end', () => {
-          if (this.queue.length > 1) {
-            this.queue[channel.guild_id].push( this.queue[channel.guild_id].shift() );
-            this.play.call(this, channel);
-          } else this.queue[channel.guild_id].shift();
-        });
-
-
-        return resolve();
-      }).catch(reject);
-    });
+      encoderStream.on('error', err => console.error('encoder stream error', err));
+      encoder.on('error', err => console.error('encoder error', err));
+      encoder.once('end', () => {
+        if (this.queue[channel.guild_id].length > 0) {
+          this.playing.set(channel.guild_id, false);
+          this.queue[channel.guild_id].push(this.queue[channel.guild_id].shift());
+          this.play.call(this, channel);
+        } else this.queue[channel.guild_id].shift();
+      });
+    }).catch(error => console.error(error));
   }
 
   /**
@@ -153,7 +147,7 @@ class Player {
       encoderStream.unpipeAll();
 
       // shift the queue
-      this.queue[msg.guild.id].push( this.queue[msg.guild.id].shift() );
+      this.queue[msg.guild.id].push(this.queue[msg.guild.id].shift());
 
       this.main.mainWindow.webContents.send('queueUpdate', {
         guild: msg.guild.id,
@@ -210,8 +204,9 @@ class Player {
         });
 
         this.getConnection(voiceChannel).then(info => {
-          let encoderStream = info.voiceConnection.getEncoderStream();
-          if (!encoderStream) this.play(voiceChannel);
+          if (!this.getPlayingState(voiceChannel)) {
+            this.play(voiceChannel);
+          }
         });
 
         resolve(info);
@@ -221,7 +216,7 @@ class Player {
 
   /**
    * Remove song from queue
-   * @param  {Object} msg   discord.js message resolvable
+   * @param  {Object} guildId id of guild to remove the song from.
    * @param  {Number} index Index of song to remove
    */
   remove(guildId, index) {
@@ -260,6 +255,15 @@ class Player {
       guild: msg.guild.id,
       queue: this.queue[msg.guild.id]
     });
+  }
+
+  /**
+   * Checks if the bot is currently playing audio
+   * @param channel
+   * @returns {boolean}
+   */
+  getPlayingState(channel) {
+    return this.playing.get(channel.id) === true;
   }
 
   /**
