@@ -49,7 +49,7 @@ commands.set('remove', {
     const result = this.player.remove(msg.guild.id, index);
     msg.channel.sendMessage(`Removed ${result.title}`);
   }
-})
+});
 
 commands.set('play', {
   name: 'play',
@@ -104,6 +104,6 @@ commands.set('ping', {
             message.edit("pong `"+diff+"ms`");
         });
     }
-})
+});
 
 module.exports = commands;
