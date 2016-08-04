@@ -38,7 +38,6 @@ function MainController($scope, $sce) {
       console.log('voiceConnect', channel);
       $scope.servers = $scope.servers.map(s => {
         s.voiceChannel = s.voiceChannels.find(c => c.id === channel.id);
-        if (!s.voiceChannel) s.voiceChannel = {name: "Not Connected"};
         return s;
       });
       $scope.$apply();
