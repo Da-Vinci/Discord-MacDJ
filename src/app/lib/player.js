@@ -96,10 +96,14 @@ class Player {
 
       let encoderStream = encoder.play();
 
-      this.client.User.setStatus("online", {name: mediaInfo.title});
+      this.client.User.setStatus("online", { name: mediaInfo.title });
 
-      encoderStream.on('error', err => console.error('encoder stream error', err));
+      if (encoderStream.listenerCount('error') < 2) {
+        encoderStream.on('error', err => console.error('encoder stream error', err));
+      }
+
       encoder.on('error', err => console.error('encoder error', err));
+
       encoder.once('end', () => {
         if (this.queue[channel.guild_id].length > 0) {
           this.playing.set(channel.guild_id, false);
