@@ -2,14 +2,45 @@
 
 const commands = new Map();
 
-commands.set('add', {
-  name: 'add',
+// commands.set('play', {
+//   name: 'play',
+//   description: 'Play the current queue',
+//   execute: function (msg) {
+//     let voiceChannel = msg.author.getVoiceChannel(msg.guild);
+//     if (!voiceChannel) return msg.channel.sendMessage('You should be in a voice channel first.');
+//     this.player.play(voiceChannel).catch(err => console.error(err));
+//   }
+// });
+
+commands.set('play', {
+  name: 'play',
   description: 'Add a song to the queue.',
   execute: function (msg, args) {
-    if (!args.length) return msg.channel.sendMessage('Usage: add [url]');
-    this.player.add(msg, args[0]).then((info) => {
+    let voiceChannel = msg.author.getVoiceChannel(msg.guild);
+
+    if (!voiceChannel) return msg.channel.sendMessage('You should be in a voice channel first.');
+    if (!args.length) return msg.channel.sendMessage('Usage: play [url]');
+    
+    this.player.add(msg, voiceChannel, args[0]).then((info) => {
       msg.channel.sendMessage(`Added ${info.title} to the queue.`);
     }).catch(err => console.error(err));
+  }
+});
+
+commands.set('stop', {
+  name: 'stop',
+  description: 'Stop playing.',
+  execute: function (msg) {
+    let voiceChannel = msg.author.getVoiceChannel(msg.guild);
+    this.player.stop(voiceChannel);
+  }
+});
+
+commands.set('skip', {
+  name: 'skip',
+  description: 'Skip the current song.',
+  execute: function (msg) {
+    this.player.skip(msg);
   }
 });
 
@@ -49,33 +80,6 @@ commands.set('remove', {
     const result = this.player.remove(msg.guild.id, index);
     msg.channel.sendMessage(`Removed ${result.title}`);
   }
-})
-
-commands.set('play', {
-  name: 'play',
-  description: 'Play the current queue',
-  execute: function (msg) {
-    let voiceChannel = msg.author.getVoiceChannel(msg.guild);
-    if (!voiceChannel) return msg.channel.sendMessage('You should be in a voice channel first.');
-    this.player.play(voiceChannel).catch(err => console.error(err));
-  }
-});
-
-commands.set('stop', {
-  name: 'stop',
-  description: 'Stop playing.',
-  execute: function (msg) {
-    let voiceChannel = msg.author.getVoiceChannel(msg.guild);
-    this.player.stop(voiceChannel);
-  }
-});
-
-commands.set('skip', {
-  name: 'skip',
-  description: 'Skip the current song.',
-  execute: function (msg) {
-    this.player.skip(msg);
-  }
 });
 
 commands.set('pause', {
@@ -104,6 +108,6 @@ commands.set('ping', {
             message.edit("pong `"+diff+"ms`");
         });
     }
-})
+});
 
 module.exports = commands;
