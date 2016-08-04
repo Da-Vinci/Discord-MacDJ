@@ -37,7 +37,8 @@ function MainController($scope, $sce) {
     ipcRenderer.on('voiceConnect', (event, channel) => {
       console.log('voiceConnect', channel);
       $scope.servers = $scope.servers.map(s => {
-        s.voiceChannel = s.voiceChannels.find(c => c.id === channel.id);
+        if (s.voiceChannels.find(c => c.id === channel.id))
+            s.voiceChannel = s.voiceChannels.find(c => c.id === channel.id);
         return s;
       });
       $scope.$apply();
