@@ -104,6 +104,10 @@ class Player {
         if (this.queue[channel.guild_id].length > 0) {
           this.playing.set(channel.guild_id, false);
           this.queue[channel.guild_id].push(this.queue[channel.guild_id].shift());
+          this.main.mainWindow.webContents.send('queueUpdate', {
+            guild: channel.guild_id,
+            queue: this.queue[channel.guild_id]
+          });
           this.play.call(this, channel);
         } else this.queue[channel.guild_id].shift();
       });
