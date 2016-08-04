@@ -96,14 +96,22 @@ class Player {
 
       let encoderStream = encoder.play();
 
-      this.client.User.setStatus("online", {name: mediaInfo.title});
+      this.client.User.setStatus("online", { name: mediaInfo.title });
 
-      encoderStream.on('error', err => console.error('encoder stream error', err));
+      if (encoderStream.listenerCount('error') < 2) {
+        encoderStream.on('error', err => console.error('encoder stream error', err));
+      }
+
       encoder.on('error', err => console.error('encoder error', err));
+
       encoder.once('end', () => {
         if (this.queue[channel.guild_id].length > 0) {
           this.playing.set(channel.guild_id, false);
           this.queue[channel.guild_id].push(this.queue[channel.guild_id].shift());
+          this.main.mainWindow.webContents.send('queueUpdate', {
+            guild: channel.guild_id,
+            queue: this.queue[channel.guild_id]
+          });
           this.play.call(this, channel);
         } else this.queue[channel.guild_id].shift();
       });
