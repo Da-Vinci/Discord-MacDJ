@@ -21,7 +21,7 @@ commands.set('play', {
     if (!voiceChannel) return msg.channel.sendMessage('You should be in a voice channel first.');
     if (!args.length) return msg.channel.sendMessage('Usage: play [url]');
     
-    this.player.add(msg, voiceChannel, args[0]).then((info) => {
+    this.player.add(msg.guild.id, voiceChannel, args[0]).then((info) => {
       msg.channel.sendMessage(`Added ${info.title} to the queue.`);
     }).catch(err => console.error(err));
   }

@@ -185,15 +185,18 @@ class Main {
    * @param  {Object} event   ipc event
    * @param  {Object} payload payload object
    */
-  onCommand(event, payload) {
-    switch (payload.command) {
-      case 'queueDelete':
-        var index = parseInt(payload.data.index, 10) + 1;
-        this.player.remove(payload.data.guild, index);
-        break;
+  onCommand(event, {command, data}) {
+    switch (command) {
       case 'prefix':
-        this.config.prefix = payload.data;
+        this.config.prefix = data;
         this.saveConfig();
+        break;
+      case 'queueAdd':
+        this.player.add(data.guild, data.vc, data.url);
+        break;
+      case 'queueDelete':
+        var index = parseInt(data.index, 10) + 1;
+        this.player.remove(data.guild, index);
         break;
     }
   }

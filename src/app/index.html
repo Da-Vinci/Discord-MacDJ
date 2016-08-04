@@ -45,7 +45,7 @@
                 <table class="u-full-width">
                     <tbody>
                         <tr ng-repeat="server in servers">
-                            <td ng-if="queue[server.id]">
+                            <td ng-if="queue[server.id]" colspan="2">
                                 <h5>{{server.name}}</h5>
                                 <p ng-if="queue[server.id]">
                                     Channel: {{server.voiceChannel.name}}
@@ -61,6 +61,7 @@
                                         <th>Name</th>
                                         <th>URL</th>
                                         <th>Length</th>
+                                        <th></th>
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="song in queue[server.id]">

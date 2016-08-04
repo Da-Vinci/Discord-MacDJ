@@ -190,10 +190,10 @@ class Player {
    * @param {Object} msg     discord.js message resolvable
    * @param {Object} songObj Youtube song object
    */
-  add(msg, voiceChannel, url) {
+  add(guildId, voiceChannel, url) {
     url = url.replace('/<|>/g', '');
 
-    this.queue[msg.guild.id] = this.queue[msg.guild.id] || [];
+    this.queue[guildId] = this.queue[guildId] || [];
 
     return new Promise((resolve, reject) => {
       ytdl.getInfo(url, (err, info) => {
@@ -204,11 +204,11 @@ class Player {
 
         if (!info.video_id) return reject('No video id.');
         info.betterTime = utils.betterTime(info.length_seconds);
-        this.queue[msg.guild.id].push(info);
+        this.queue[guildId].push(info);
 
         this.main.mainWindow.webContents.send('queueUpdate', {
-          guild: msg.guild.id,
-          queue: this.queue[msg.guild.id]
+          guild: guildId,
+          queue: this.queue[guildId]
         });
 
         if (!this.getPlayingState(voiceChannel)) {

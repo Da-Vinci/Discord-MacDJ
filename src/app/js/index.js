@@ -75,10 +75,12 @@ function applyJS() {
     del.unbind();
     add.unbind();
     add.on('click', function() {
-        let url = $(this).closest(".addDiv").find("input").val();
-        let guild = $(this).closest(".addDiv").find("input").attr("guild");
-        let vc = $(this).closest(".addDiv").find("input").attr("vc");
-        ipcRenderer.send('command', {command: 'add', data: {url: url, guild: guild, vc: vc}});
+        let $input = $(this).closest('.addDiv').find('input');
+        let url = $input.val();
+        let guild = $input.attr("guild");
+        let vc = $input.attr("vc");
+        ipcRenderer.send('command', {command: 'queueAdd', data: {url: url, guild: guild, vc: vc}});
+        $input.val('');
     });
     volume.on('input', function() {
         console.log($(this).val());
