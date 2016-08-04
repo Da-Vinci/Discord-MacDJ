@@ -14,7 +14,7 @@ function MainController($scope, $sce) {
     $scope.trustAsHtml = $sce.trustAsHtml; // i don't trust this AAHAHAHAHAHAHAHAHA
     $scope.client = { username: '' };
     $scope.settings = [
-        {key: "Prefix", value: '<input type="text" id="prefix" value="+"></input>', format: ""},
+        {key: "Prefix", value: '<input type="text" id="prefix" value="+"/>', format: ""},
         {key: "Default Volume", value: "100", "format": "%"}
     ];
 
@@ -48,7 +48,7 @@ function MainController($scope, $sce) {
       console.log('voiceDisconnect', channel);
       $scope.servers = $scope.servers.map(s => {
         if (s.voiceChannel && s.voiceChannel.id === channel.id) {
-          //delete s.voiceChannel;
+          // delete s.voiceChannel;
           s.voiceChannel = {name: "Not Connected"};
         }
         return s;
@@ -57,7 +57,7 @@ function MainController($scope, $sce) {
     });
 
     ipcRenderer.on('queueUpdate', (event, data) => {
-      console.log('queueUpdate', data)
+      console.log('queueUpdate', data);
       $scope.queue[data.guild] = data.queue;
       $scope.$apply();
       applyJS();
@@ -65,27 +65,30 @@ function MainController($scope, $sce) {
 }
 
 function applyJS() {
-    $('#volume').unbind();
-    $('#prefix').unbind();
-    $('.delete').unbind();
-    $('#volume').on('input', function() {
+    let volume = $('#volume');
+    let prefix = $('#prefix');
+    let del = $('.delete');
+    volume.unbind();
+    prefix.unbind();
+    del.unbind();
+    volume.on('input', function() {
         console.log($(this).val());
     });
-    $('#prefix').keypress(function (e) {
+    prefix.keypress(function (e) {
         if (e.which == 13) {
             if ($(this).val().length < 33) {
-                console.log($(this).val())
+                console.log($(this).val());
                 ipcRenderer.send('command', {command: 'prefix', data: $(this).val()});
             }
             return false;
         }
     });
-    $('.delete').on('click', function() {
+    del.on('click', function() {
         let command = {command: 'queueDelete', data: {index: $(this).attr('index'), guild: $(this).attr('guild')}};
         console.log(command);
         ipcRenderer.send('command', command);
     });
-};
+}
 
 function TokenController($scope) {
   $scope.token = config.token || "";
