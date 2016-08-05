@@ -15,25 +15,30 @@ function MainController($scope, $sce) {
     $scope.trustAsHtml = $sce.trustAsHtml; // i don't trust this AAHAHAHAHAHAHAHAHA
     $scope.client = { username: '' };
     $scope.settings = [
-        {key: "Prefix", value: '<input type="text" id="prefix" value="+"/>', format: ""},
-        {key: "Default Volume", value: "100", "format": "%"}
+        {key: 'Username', value: '<input type="text" class="setting" id="username" value=""/>', format: ''},
+        {key: "Prefix", value: '<input type="text" class="setting" id="prefix" value="+"/>', format: ""},
+        {key: "Default Volume", value: "100", format: "%"}
     ];
 
     $scope.queue = {};
 
-    ipcRenderer.on('ready', (event, client) => {
-        $scope.client = client.user;
-        $scope.prefix = client.prefix;
-        window.$('#prefix').val(client.prefix);
-        window.client = client;
-        $scope.servers = client.servers.map(s => {
-            s.voiceChannel = {name: "Not Connected"};
-            return s;
-        });
-        $('.overlay').remove();
-        $scope.$apply();
-        applyJS();
-    });
+    function updateClient(event, client) {
+      $scope.client = client.user;
+      $scope.prefix = client.prefix;
+      window.$('#prefix').val(client.prefix);
+      window.$('#username').val(client.user.username);
+      window.client = client;
+      $scope.servers = client.servers.map(s => {
+          s.voiceChannel = {name: "Not Connected"};
+          return s;
+      });
+      if ($('.overlay')) $('.overlay').remove();
+      $scope.$apply();
+      applyJS();
+    }
+
+    ipcRenderer.on('ready', updateClient);
+    ipcRenderer.on('update', updateClient);
 
     ipcRenderer.on('voiceConnect', (event, channel) => {
       console.log('voiceConnect', channel);
@@ -67,12 +72,12 @@ function MainController($scope, $sce) {
 }
 
 function applyJS() {
-    let volume = $('#volume');
-    let prefix = $('#prefix');
-    let del = $('.delete');
-    let add = $('.addButton');
+    let volume = $('#volume'),
+        del = $('.delete'),
+        add = $('.addButton');
+
+    $('.setting').unbind();
     volume.unbind();
-    prefix.unbind();
     del.unbind();
     add.unbind();
     add.on('click', function() {
@@ -83,11 +88,13 @@ function applyJS() {
         ipcRenderer.send('command', {command: 'queueAdd', data: {url: url, guild: guild, vc: vc}});
         $input.val('');
     });
+
     volume.on('input', function() {
         console.log($(this).val());
     });
-    prefix.keypress(function (e) {
-        if (e.which == 13) {
+
+    $('#prefix').on('keypress', function (e) {
+        if (e.which === 13) {
             if ($(this).val().length < 33) {
                 console.log($(this).val());
                 ipcRenderer.send('command', {command: 'prefix', data: $(this).val()});
@@ -95,6 +102,16 @@ function applyJS() {
             return false;
         }
     });
+
+    $('#username').on('keypress', function (e) {
+      if (e.which === 13) {
+        if ($(this).val().length > 2) {
+          ipcRenderer.send('command', {command: 'username', data: $(this).val()});
+        }
+        return false;
+      }
+    });
+
     del.on('click', function() {
         let command = {command: 'queueDelete', data: {index: $(this).attr('index'), guild: $(this).attr('guild')}};
         console.log(command);

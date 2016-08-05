@@ -76,11 +76,8 @@ class Main {
     if (!this.mainWindow) this.createWindow();
   }
 
-  /**
-   * Client ready event handler
-   */
-  onReady() {
-    let payload = {
+  getClientPayload() {
+    return {
       prefix: this.config.prefix || '+',
       user: {
           id: client.User.id,
@@ -98,6 +95,13 @@ class Main {
         };
       })
     };
+  }
+
+  /**
+   * Client ready event handler
+   */
+  onReady() {
+    let payload = this.getClientPayload();
 
     this.player.start(client);
 
@@ -189,6 +193,11 @@ class Main {
       case 'prefix':
         this.config.prefix = data;
         this.saveConfig();
+        break;
+      case 'username':
+        this.client.User.setUsername(data).then(() => {
+          this.mainWindow.webContents.send('update', this.getClientPayload());
+        });
         break;
       case 'queueAdd':
         this.player.add(data.guild, data.vc, data.url);
