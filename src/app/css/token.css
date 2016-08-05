@@ -6,8 +6,8 @@ body {
     font-weight: 100;
 }
 
-input {
-    color: #000;
+#tokenButton {
+    color: #FFF;
 }
 
 input[type="text"] {
