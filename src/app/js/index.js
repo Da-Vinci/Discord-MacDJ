@@ -69,6 +69,14 @@ function MainController($scope, $sce) {
       $scope.$apply();
       applyJS();
     });
+
+    ipcRenderer.on('error', (event, data) => {
+        noty({text: data, type: 'error', timeout: true});
+    })
+
+    ipcRenderer.on('success', (event, data) => {
+        noty({text: data, type: 'success', timeout: true});
+    });
 }
 
 function applyJS() {

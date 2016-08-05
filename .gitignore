@@ -38,3 +38,4 @@ private
 .idea
 .DS_Store
 jsconfig.json
+builds
