@@ -1,11 +1,12 @@
-const path = require('path');
+/* eslint-env node, browser, jquery */
+
 const electron = require('electron');
 const remote = electron.remote;
 const ipcRenderer = electron.ipcRenderer;
 
 const config = remote.app.config;
 
-let main = angular.module('mainApp', ['ngSanitize', 'scrollglue']);
+let main = angular.module('mainApp', ['ngSanitize']);
 
 main.controller('MainController', ['$scope', '$sce', MainController]);
 main.controller('TokenController', ['$scope', TokenController]);

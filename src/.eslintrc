@@ -13,5 +13,8 @@
     "no-redeclare": 0,
     "no-inner-declarations": 0
   },
-  "extends": "eslint:recommended"
+  "extends": "eslint:recommended",
+  "globals": {
+    "angular": 1
+  }
 }

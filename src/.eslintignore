@@ -3,5 +3,6 @@ test/*
 public/*
 private/*
 views/*
+vendor/*
 *.md
 *.json

@@ -4,7 +4,7 @@
 const os = require('os');
 const electron = require('electron');
 const app = electron.app;
-const autoUpdater = electron.autoUpdater;
+// const autoUpdater = electron.autoUpdater;
 var platform = os.platform() + '_' + os.arch();
 var version = app.getVersion();
 

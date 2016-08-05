@@ -1,8 +1,8 @@
 "use strict";
-const electron = require('electron')
-const BrowserWindow = electron.BrowserWindow
-const Menu = electron.Menu
-const app = electron.app
+// const electron = require('electron')
+// const BrowserWindow = electron.BrowserWindow
+// const Menu = electron.Menu
+// const app = electron.app
 
 module.exports = function (app) {
   return [{
