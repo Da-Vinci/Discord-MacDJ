@@ -96,9 +96,13 @@ module.exports = function (grunt) {
     appdmg: {
       options: {
         basepath: '../assets',
-        title: '<%= pkg.productName %>',
+        title: '<%= pkg.productName %> Installer',
         icon: 'macdj.icns',
-        background: 'background.png'
+        "background": "macdj-dmg-background.png",
+        "contents": [
+          { "x": 750, "y": 375, "type": "link", "path": "/Applications" },
+          { "x": 170, "y": 375, "type": "file", "path": "MacDJ.app" }
+        ]
       }
     }
   });
@@ -108,6 +112,7 @@ module.exports = function (grunt) {
 
   // register tasks
   grunt.registerTask('lint', ['eslint']);
+  grunt.registerTask('appdmg', ['appdmg']);
   grunt.registerTask('build-osx', ['eslint', 'electron:osxBuild']);
   grunt.registerTask('build-win', ['eslint', 'electron:win32Build', 'electron:win64Build']);
   grunt.registerTask('build-all', ['eslint', 'electron:osxBuild', 'electron:win32Build', 'electron:win64Build']);
