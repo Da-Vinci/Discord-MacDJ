@@ -98,6 +98,18 @@ commands.set('resume', {
   }
 });
 
+commands.set('invite', {
+  name: 'invite',
+  description: 'Generates a bot invite link.',
+  execute: function (msg) {
+    this.client.getApplication()
+	.then(application, error) => {
+		msg.channel.sendMessage(`To invite the bot to your server, click here:
+https://discordapp.com/oauth2/authorize?client_id=${application.id}&scope=bot`);
+	}
+  }
+});
+
 commands.set('ping', {
     name: 'ping',
     description: 'ping pong ping pong',
