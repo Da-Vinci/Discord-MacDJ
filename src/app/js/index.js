@@ -71,11 +71,11 @@ function MainController($scope, $sce) {
     });
 
     ipcRenderer.on('error', (event, data) => {
-        noty({text: data, type: 'error', timeout: true});
-    })
+        noty({text: data, type: 'error', timeout: 3000});
+    });
 
     ipcRenderer.on('success', (event, data) => {
-        noty({text: data, type: 'success', timeout: true});
+        noty({text: data, type: 'success', timeout: 3000});
     });
 }
 
@@ -118,6 +118,10 @@ function applyJS() {
         }
         return false;
       }
+    });
+
+    $('#username').on('click', function() {
+        noty({text: "A bot's username can only be changed twice per hour", type: 'warning', timeout: 3000});
     });
 
     del.on('click', function() {
