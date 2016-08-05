@@ -14,6 +14,40 @@ const Player = require('./lib/player');
 const client = new Discord();
 const dbPath = path.join(app.getPath('userData'), 'config.db');
 
+const credits = [
+  {
+    title: 'Bot',
+    list: [
+      { name: 'Website', type: 'link', href: 'http://macdj.tk' },
+      { name: 'Discord', type: 'link', href: 'http://macdj.tk/discord' }
+    ]
+  },
+  {
+    title: 'Developers',
+    list: [
+      { name: 'NoobLance™#3500', type: 'human' },
+      { name: 'Gus#0291', type: 'human' },
+      { name: '```Macdja38#7770'.replace(/`/g, String.fromCharCode(8203) + '`'), type: 'human' }
+    ]
+  },
+  {
+    title: 'Contributors',
+    list: [
+      { name: 'Dean#5368', type: 'link', href: 'http://discord.fm' },
+      { name: 'Gexo#6439', type: 'human' },
+      { name: 'Lucky_Evie#4611', type: 'human' },
+      { name: 'Meowbeast™#4695', type: 'human' }
+    ]
+  },
+  {
+    title: "Other things we've done",
+    list: [
+      { name: 'PvPCraft', type: 'link', href: 'http://pvpcraft.ca' },
+      { name: 'Dyno', type: 'link', href: 'https://www.dynobot.net' }
+    ]
+  }
+];
+
 let main;
 
 if (!utils.existsSync(dbPath)) {
@@ -29,11 +63,14 @@ class Main {
     this.retries = 0;
     this.commands = require('./commands');
     this.version = require('../package.json').version;
+    this.credits = credits;
 
     // debug: print userData path so we know where data files are being stored locally
     console.log(app.getPath('userData'));
 
     this.config = app.config = this.getConfig();
+
+    app.createAboutWindow = this.createAboutWindow.bind(this);
 
     // App event handlers
     app.on('ready', this.login.bind(this));
@@ -94,7 +131,8 @@ class Main {
           textChannels: s.channels.filter(c => c.type === 'text').map(c => { return { id: c.id, name: c.name }; }),
           voiceChannels: s.channels.filter(c => c.type === 'voice').map(c => { return { id: c.id, name: c.name }; })
         };
-      })
+      }),
+      credits: this.credits
     };
   }
 
@@ -170,6 +208,27 @@ class Main {
     msg.channel.sendMessage(msgArray.join("\n"));
   }
 
+  generateCredits(msg) {
+    let msgArray = [];
+        // i = 1;
+
+    msgArray.push('```xl');
+    msgArray.push(`┏━[ MacDJ v${this.version} ]`)
+    for (let section of credits) {
+      let title = /*(i == 1) ? `┏━[ ${section.title} ]` :*/ `┃\n┣━━[ ${section.title} ]`;
+      msgArray.push(`${title}\n┃`);
+      for (let item of section.list) {
+        let text = (item.type === 'link') ? `${utils.pad(item.name, 15)} (${item.href})` : `${item.name}`;
+        msgArray.push('┃    ' + text);
+      }
+      // i++;
+    }
+    msgArray.push(`┃\n┗${'━'.repeat(26)}[ The Da Vinci Team ]`);
+    msgArray.push('```');
+
+    msg.channel.sendMessage(msgArray.join("\n"));
+  }
+
   /**
    * Message handler
    * @param  {Object} msg Message resolvable
@@ -185,7 +244,7 @@ class Main {
     const cmd = params[0].replace(prefix, '').toLowerCase(),
           args = params.slice(1);
 
-    if (cmd === 'help') return this.generateHelp(msg, args);
+    if (cmd === 'help') return this.generateHelp(msg);
     if (!this.commands.has(cmd)) return;
 
     if (msg.channel.is_private) return msg.channel.sendMessage('You should be in a channel to use commands.');
@@ -283,6 +342,12 @@ class Main {
     app.mainWindow = this.mainWindow;
 
     if (this.tokenWindow) this.tokenWindow.close();
+  }
+
+  createAboutWindow() {
+    this.aboutWindow = new BrowserWindow({width: 300, height: 400});
+    this.aboutWindow.setMenu(null);
+    this.aboutWindow.loadURL('file://' + __dirname + '/about.html');
   }
 }
 

@@ -10,6 +10,7 @@ let main = angular.module('mainApp', ['ngSanitize']);
 
 main.controller('MainController', ['$scope', '$sce', MainController]);
 main.controller('TokenController', ['$scope', TokenController]);
+main.controller('AboutController', ['$scope', AboutController]);
 
 function MainController($scope, $sce) {
     $scope.trustAsHtml = $sce.trustAsHtml; // i don't trust this AAHAHAHAHAHAHAHAHA
@@ -25,14 +26,19 @@ function MainController($scope, $sce) {
     function updateClient(event, client) {
       $scope.client = client.user;
       $scope.prefix = client.prefix;
-      window.$('#prefix').val(client.prefix);
-      window.$('#username').val(client.user.username);
-      window.client = client;
       $scope.servers = client.servers.map(s => {
           s.voiceChannel = {name: "Not Connected"};
           return s;
       });
+
+      console.log(client.credits);
+      
+      window.$('#prefix').val(client.prefix);
+      window.$('#username').val(client.user.username);
+      window.client = client;
+      
       if ($('.overlay')) $('.overlay').remove();
+      
       $scope.$apply();
       applyJS();
     }
@@ -138,4 +144,8 @@ function TokenController($scope) {
   function saveToken() {
     ipcRenderer.send('token', $scope.token);
   }
+}
+
+function AboutController($scope) {
+  // need to get credits here somehow, from the other controller?
 }

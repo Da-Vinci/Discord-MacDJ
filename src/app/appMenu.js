@@ -8,44 +8,32 @@ module.exports = function (app) {
   return [{
     label: "Application",
     submenu: [
-      { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+      {
+        label: "About Application",
+        click: function () {
+          app.createAboutWindow();
+        }
+      },
       { type: "separator" },
       { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
     ]}, {
       label: "View",
-      submenu: [
-      /*{
-    label: 'Reload',
-    accelerator: 'CmdOrCtrl+R',
-    click: function (item, focusedWindow) {
-      if (focusedWindow) {
-        // on reload, start fresh and close any old
-        // open secondary windows
-        if (focusedWindow.id === 1) {
-          BrowserWindow.getAllWindows().forEach(function (win) {
-            if (win.id > 1) {
-              win.close()
-            }
-          })
+      submenu: [{
+        label: 'Toggle Developer Tools',
+        accelerator: (function () {
+          if (process.platform === 'darwin') {
+            return 'Alt+Command+I'
+          } else {
+            return 'Ctrl+Shift+I'
+          }
+        })(),
+        click: function (item, focusedWindow) {
+          if (focusedWindow) {
+            focusedWindow.toggleDevTools()
+          }
         }
-        focusedWindow.reload()
-      }
-    }},*/ {
-    label: 'Toggle Developer Tools',
-    accelerator: (function () {
-      if (process.platform === 'darwin') {
-        return 'Alt+Command+I'
-      } else {
-        return 'Ctrl+Shift+I'
-      }
-    })(),
-    click: function (item, focusedWindow) {
-      if (focusedWindow) {
-        focusedWindow.toggleDevTools()
-      }
-    }
-  }
-    ]}, {
+      }]
+    }, {
       label: "Edit",
       submenu: [
       { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },

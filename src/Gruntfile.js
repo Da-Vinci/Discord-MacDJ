@@ -8,8 +8,8 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON(path.resolve('./package.json')),
-    companyName: 'The DaVinci Team',
-    copyright: 'Copyright (C) 2016 The DaVinci Team',
+    companyName: 'The Da Vinci Team',
+    copyright: 'Copyright (C) 2016 The Da Vinci Team',
 
     eslint: {
       src: ['index.js', 'app/**/*.js', '!node_modules/*', '!app/**/vendor/*.js'],

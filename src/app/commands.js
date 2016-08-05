@@ -109,6 +109,14 @@ https://discordapp.com/oauth2/authorize?client_id=${application.id}&scope=bot`);
   }
 });
 
+commands.set('info', {
+  name: 'info',
+  description: 'Bot info',
+  execute: function (msg) {
+    this.generateCredits(msg);
+  }
+});
+
 commands.set('ping', {
     name: 'ping',
     description: 'ping pong ping pong',
