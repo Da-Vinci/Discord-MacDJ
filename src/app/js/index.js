@@ -5,6 +5,7 @@ const remote = electron.remote;
 const ipcRenderer = electron.ipcRenderer;
 
 const config = remote.app.config;
+const noty = window.noty || function(){};
 
 let main = angular.module('mainApp', ['ngSanitize']);
 
@@ -147,5 +148,6 @@ function TokenController($scope) {
 }
 
 function AboutController($scope) {
+  $scope.thisneedswork = true;
   // need to get credits here somehow, from the other controller?
 }
