@@ -11,6 +11,7 @@ input[type="button"] {
 }
 
 input[type="text"] {
+    color: #000;
     margin-left: 1em;
 }
 
