@@ -28,6 +28,7 @@ class Main {
     this.activeChannel = null;
     this.retries = 0;
     this.commands = require('./commands');
+    this.version = require('../package.json').version;
 
     // debug: print userData path so we know where data files are being stored locally
     console.log(app.getPath('userData'));
@@ -152,6 +153,7 @@ class Main {
     for (let command of this.commands.values()) {
       msgArray.push(`${prefix}${utils.pad(command.name, 15)} ${command.description}`);
     }
+    msgArray.push(`\nMacDJ v${this.version}`)
     msgArray.push('```');
 
     msg.channel.sendMessage(msgArray.join("\n"));
