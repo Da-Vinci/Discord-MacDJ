@@ -40,7 +40,7 @@ const credits = [
     ]
   },
   {
-    title: "Other things we've done",
+    title: "Accomplishments",
     list: [
       { name: 'PvPCraft', type: 'link', href: 'http://pvpcraft.ca' },
       { name: 'Dyno', type: 'link', href: 'https://www.dynobot.net' }
