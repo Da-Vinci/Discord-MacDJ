@@ -1,9 +1,13 @@
+'use strict';
+
+const path = require('path');
+
 module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: grunt.file.readJSON(path.resolve('./package.json')),
     companyName: 'The DaVinci Team',
     copyright: 'Copyright (C) 2016 The DaVinci Team',
 
@@ -95,15 +99,15 @@ module.exports = function (grunt) {
 
     appdmg: {
       options: {
-        basepath: '../assets',
         title: '<%= pkg.productName %> Installer',
-        icon: 'macdj.icns',
-        "background": "macdj-dmg-background.png",
+        icon: '../assets/macdj.icns',
+        "background": "../assets/macdj-dmg-background.png",
         "contents": [
           { "x": 750, "y": 375, "type": "link", "path": "/Applications" },
-          { "x": 170, "y": 375, "type": "file", "path": "MacDJ.app" }
+          { "x": 170, "y": 375, "type": "file", "path": "../builds/MacDJ-darwin-x64/MacDJ.app" }
         ]
-      }
+      },
+      target: '../builds/MacDJ.dmg'
     }
   });
 
