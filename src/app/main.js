@@ -150,11 +150,13 @@ class Main {
 
 	const prefix = this.config.prefix || '+';
     msgArray.push('```xl');
+    msgArray.push('Commands:\n')
     for (let command of this.commands.values()) {
       if (command.hideFromHelp) continue;
-      msgArray.push(`${prefix}${utils.pad(command.name, 15)} ${command.description}`);
+      msgArray.push(`  ${prefix}${utils.pad(command.name, 15)} ${command.description}`);
     }
-    msgArray.push(`\nMacDJ v${this.version}`)
+    let footer = `[ MacDJ v${this.version} by The DaVinci Team ]`;
+    msgArray.push(`\n${new Array(Math.floor(((msgArray.slice(0).sort(function (a, b) { return b.length - a.length; })[0].length)/2)-(footer.length/2))).fill().join(' ')}${footer}`);
     msgArray.push('```');
 
     msg.channel.sendMessage(msgArray.join("\n"));
