@@ -145,9 +145,10 @@ class Main {
   generateHelp(msg) {
     let msgArray = [];
 
+	const prefix = this.config.prefix || '+';
     msgArray.push('```xl');
     for (let command of this.commands.values()) {
-      msgArray.push(`${utils.pad(command.name, 15)} ${command.description}`);
+      msgArray.push(`${prefix}${utils.pad(command.name, 15)} ${command.description}`);
     }
     msgArray.push('```');
 
