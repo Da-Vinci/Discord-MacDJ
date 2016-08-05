@@ -151,6 +151,7 @@ class Main {
 	const prefix = this.config.prefix || '+';
     msgArray.push('```xl');
     for (let command of this.commands.values()) {
+      if (command.hideFromHelp) continue;
       msgArray.push(`${prefix}${utils.pad(command.name, 15)} ${command.description}`);
     }
     msgArray.push(`\nMacDJ v${this.version}`)

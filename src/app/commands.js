@@ -112,6 +112,7 @@ https://discordapp.com/oauth2/authorize?client_id=${application.id}&scope=bot`);
 commands.set('ping', {
     name: 'ping',
     description: 'ping pong ping pong',
+    hideFromHelp: true,
     execute: function(msg) {
         let start = process.hrtime();
         msg.channel.sendMessage('pong').then((message) => {
