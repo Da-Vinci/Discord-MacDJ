@@ -146,17 +146,25 @@ class Main {
    * @param  {Object} msg  Message resolvable
    */
   generateHelp(msg) {
-    let msgArray = [];
+    let prefix = this.config.prefix || '+',
+        commands = [...this.commands.values()],
+        msgArray = [];
 
-	const prefix = this.config.prefix || '+';
+    let nLength = commands.map(o=>o.name).sort(function (a, b) { return b.length - a.length; })[0].length + 3,
+        dLength = commands.map(o=>o.description).sort(function (a, b) { return b.length - a.length; })[0].length + 1,
+        fLength = nLength+dLength+1;
+
     msgArray.push('```xl');
-    msgArray.push('Commands:\n')
+    msgArray.push(utils.lpad('┏━[ Commands ]', ' ', nLength+1) + `${'━'.repeat(dLength)}━┓`);
+    msgArray.push(`┃  ${' '.repeat(fLength)}  ┃`);
+
     for (let command of this.commands.values()) {
       if (command.hideFromHelp) continue;
-      msgArray.push(`  ${prefix}${utils.pad(command.name, 15)} ${command.description}`);
+      msgArray.push(`┃  ${prefix}${utils.pad(command.name, nLength)} ${utils.rpad(command.description, dLength, ' ')} ┃`);
     }
-    let footer = `[ MacDJ v${this.version} by The DaVinci Team ]`;
-    msgArray.push(`\n${new Array(Math.floor(((msgArray.slice(0).sort(function (a, b) { return b.length - a.length; })[0].length)/2)-(footer.length/2))).fill().join(' ')}${footer}`);
+
+    msgArray.push(`┃  ${' '.repeat(fLength)}  ┃`);
+    msgArray.push(`┗━━${utils.lpad(`[ MacDJ v${this.version} ]`, fLength, '━')}━━┛`);
     msgArray.push('```');
 
     msg.channel.sendMessage(msgArray.join("\n"));

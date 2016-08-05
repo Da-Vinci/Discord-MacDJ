@@ -97,6 +97,28 @@ class Utils {
   }
 
   /**
+   * Right pad a string with a char
+   * @param  {String} str  string to pad
+   * @param  {Number} n    length to pad to
+   * @param  {String} char char to pad with
+   * @return {String}      The final string with padding
+   */
+  rpad(str, n, char) {
+    return (str.length < n) ? (str + char.repeat(n)).slice(0, n) : str;
+  }
+
+  /**
+   * Left pad a string with a char
+   * @param  {String} str  string to pad
+   * @param  {Number} n    length to pad to
+   * @param  {String} char char to pad with
+   * @return {String}      The final string with padding
+   */
+  lpad(str, n, char) {
+    return (str.length < n) ? (char.repeat(n) + str).slice(-n) : str;
+  }
+
+  /**
    * Utility function to partition array by string length
    * @param  {Array} arr  Array to partition
    * @param  {Number} len String length of partition
