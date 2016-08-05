@@ -187,7 +187,7 @@ class Main {
       msgArray.push(`${title}\n┃`);
       for (let item of section.list) {
         let text = (item.type === 'link') ? `${utils.pad(item.name, 15)} (${item.href})` : `${item.name}`;
-        msgArray.push('┃    ' + text);
+        msgArray.push('┃    ' + text.replace(/`/g, String.fromCharCode(8203) + '`'));
       }
       // i++;
     }
