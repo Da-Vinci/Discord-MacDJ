@@ -38,9 +38,7 @@ class Main {
     app.on('ready', this.login.bind(this));
 
     app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') {
-        app.quit();
-      }
+      app.quit();
     });
 
     app.on('activate', () => {
