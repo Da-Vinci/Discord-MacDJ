@@ -20,7 +20,7 @@ commands.set('play', {
 
     if (!voiceChannel) return msg.channel.sendMessage('You should be in a voice channel first.');
     if (!args.length) return msg.channel.sendMessage('Usage: play [url]');
-    
+
     this.player.add(msg.guild.id, voiceChannel, args[0]).then((info) => {
       msg.channel.sendMessage(`Added ${info.title} to the queue.`);
     }).catch(err => console.error(err));
@@ -102,7 +102,7 @@ commands.set('invite', {
   name: 'invite',
   description: 'Generates a bot invite link.',
   execute: function (msg) {
-    this.client.getApplication().then((application) => {
+    this.client.User.getApplication().then((application) => {
       msg.channel.sendMessage(`To invite the bot to your server, click here:
 https://discordapp.com/oauth2/authorize?client_id=${application.id}&scope=bot`);
     });
