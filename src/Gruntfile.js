@@ -35,7 +35,7 @@ module.exports = function (grunt) {
           ignore: new RegExp('(/bin/linux|/bin/win32|/grunt-appdmg)'),
           icon: '../assets/macdj.icns',
           prune: true,
-          asar: true,
+          asar: false,
           overwrite: true
         }
       },
@@ -55,7 +55,7 @@ module.exports = function (grunt) {
           ignore: new RegExp('(/bin/linux|/bin/darwin|/bin/win32/x64|/grunt-appdmg)'),
           icon: '../assets/macdj.ico',
           prune: true,
-          asar: true,
+          asar: false,
           overwrite: true,
           'version-string': {
             InternalName: '<%= pkg.productName %>',
@@ -83,7 +83,7 @@ module.exports = function (grunt) {
           ignore: new RegExp('(/bin/linux|/bin/darwin|/bin/win32/ia32|/grunt-appdmg)'),
           icon: '../assets/macdj.ico',
           prune: true,
-          asar: true,
+          asar: false,
           overwrite: true,
           'version-string': {
             InternalName: '<%= pkg.productName %>',
