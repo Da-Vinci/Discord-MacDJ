@@ -100,6 +100,9 @@ module.exports = function (grunt) {
     exec: {
         appdmg: {
             cmd: 'mkdir -p ../builds/dist/osx && appdmg ./appdmg.json ../builds/dist/osx/MacDJ_<%= pkg.version %>.dmg'
+        },
+        update: {
+            cmd: 'rm -rf ./node_modules && npm install'
         }
     },
 
@@ -126,11 +129,12 @@ module.exports = function (grunt) {
 
   // register tasks
   grunt.registerTask('lint', ['eslint']);
-  grunt.registerTask('appdmg', ['exec:appdmg']);
-  grunt.registerTask('appmsi', ['create-windows-installer'])
+  grunt.registerTask('update', ['exec:update']);
   grunt.registerTask('build-osx', ['eslint', 'electron:osxBuild']);
   grunt.registerTask('build-win', ['eslint', 'electron:win32Build', 'electron:win64Build']);
   grunt.registerTask('build-all', ['eslint', 'electron:osxBuild', 'electron:win32Build', 'electron:win64Build']);
-  grunt.registerTask('build-dist', ['eslint', 'electron:osxBuild', 'electron:win32Build', 'electron:win64Build', 'exec:appdmg', 'create-windows-installer'])
+  grunt.registerTask('appdmg', ['exec:appdmg']);
+  grunt.registerTask('appmsi', ['create-windows-installer']);
+  grunt.registerTask('build-dist', ['eslint', 'electron:osxBuild', 'electron:win32Build', 'electron:win64Build', 'exec:appdmg', 'create-windows-installer']);
 
 };
