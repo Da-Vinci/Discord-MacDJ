@@ -1,0 +1,9 @@
+{
+  "title": "MacDJ Installer",
+  "icon": "../assets/macdj.icns",
+  "background": "../assets/macdj-dmg-background.png",
+  "contents": [
+      { "x": 486, "y": 285, "type": "link", "path": "/Applications" },
+      { "x": 115, "y": 285, "type": "file", "path": "../builds/MacDJ-darwin-x64/MacDJ.app" }
+  ]
+}

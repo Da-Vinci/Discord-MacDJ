@@ -24,6 +24,8 @@ function MainController($scope, $sce) {
 
     $scope.queue = {};
 
+    $scope.dfm = [];
+
     function updateClient(event, client) {
       $scope.client = client.user;
       $scope.prefix = client.prefix;
@@ -43,14 +45,6 @@ function MainController($scope, $sce) {
       $scope.$apply();
       applyJS();
     }
-
-    fetch('https://temp.discord.fm/libraries/json').then(r => r.json())
-      .then(data => {
-          $scope.dfm = data;
-          console.log(data);
-          $scope.$apply();
-      })
-      .catch(e => $scope.dfm = []);
 
     ipcRenderer.on('ready', updateClient);
     ipcRenderer.on('update', updateClient);

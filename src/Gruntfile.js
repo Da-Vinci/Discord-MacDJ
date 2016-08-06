@@ -97,26 +97,20 @@ module.exports = function (grunt) {
       }
     },
 
-    appdmg: {
-      options: {
-        title: '<%= pkg.productName %> Installer',
-        icon: '../assets/macdj.icns',
-        "background": "../assets/macdj-dmg-background.png",
-        "contents": [
-          { "x": 750, "y": 375, "type": "link", "path": "/Applications" },
-          { "x": 170, "y": 375, "type": "file", "path": "../builds/MacDJ-darwin-x64/MacDJ.app" }
-        ]
-      },
-      target: '../builds/MacDJ.dmg'
+    exec: {
+        appdmg: {
+            cmd: 'appdmg ./appdmg.json ../builds/MacDJ-darwin-x64/MacDJ.dmg'
+        }
     }
   });
 
   // load plugins
   grunt.loadNpmTasks('gruntify-eslint');
+  grunt.loadNpmTasks('grunt-exec');
 
   // register tasks
   grunt.registerTask('lint', ['eslint']);
-  grunt.registerTask('appdmg', ['appdmg']);
+  grunt.registerTask('appdmg', ['eslint', 'electron:osxBuild', 'exec:appdmg']);
   grunt.registerTask('build-osx', ['eslint', 'electron:osxBuild']);
   grunt.registerTask('build-win', ['eslint', 'electron:win32Build', 'electron:win64Build']);
   grunt.registerTask('build-all', ['eslint', 'electron:osxBuild', 'electron:win32Build', 'electron:win64Build']);
