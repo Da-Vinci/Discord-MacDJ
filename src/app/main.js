@@ -185,8 +185,9 @@ class Main {
     for (let section of credits) {
       let title = /*(i == 1) ? `┏━[ ${section.title} ]` :*/ `┃\n┣━━[ ${section.title} ]`;
       msgArray.push(`${title}\n┃`);
-      for (let item of section.list.sort((a, b) => {return a.name < b.name})) {
-        let text = (item.type === 'link') ? `${utils.pad(item.name, 15)} (${item.href})` : `${item.name}`;
+      let list = section.sort ? section.list.sort((a, b) => {return a.name < b.name}) : section.list;
+      for (let item of list) {
+        let text = (item.href) ? `${utils.pad(item.name, 15)} (${item.href})` : `${item.name}`;
         msgArray.push('┃    ' + text.replace(/`/g, String.fromCharCode(8203) + '`'));
       }
       // i++;
