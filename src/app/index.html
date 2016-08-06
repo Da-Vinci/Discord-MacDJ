@@ -40,7 +40,9 @@
         </div>
         </hr>
         <div class="row channels">
-            <div class="two column"><h4>Servers</h4></div>
+            <div class="two column">
+                <h4>Servers</h4>
+            </div>
             <div class="eleven column">
                 <table class="u-full-width">
                     <tbody>
@@ -54,7 +56,11 @@
                                     </br>
                                     <p>Add Song:</p>
                                     <input type="text" class="addBox" guild="{{server.id}}" vc="{{server.voiceChannel}}"/>
-                                    <button class="addButton button-primary" type="button">ADD</button>
+                                    <button class="addButton button" type="button">ADD</button>
+                                    <select class="queueSelect">
+                                        <option>Manual Queue</option>
+                                        <option ng-repeat="lib in dfm">{{lib.name}}</option>
+                                    </select>
                                 </div>
                                 <table ng-if="queue[server.id]" class="queue">
                                     <thead>
@@ -68,7 +74,7 @@
                                             <td>{{$index+1}}. {{song.title}}</td>
                                             <td>{{song.loaderUrl}}</td>
                                             <td>{{song.betterTime}}</td>
-                                            <td><button class="delete button-primary" index="{{$index}}" guild="{{server.id}}" type="button">DELETE</button></td>
+                                            <td><button class="delete button" index="{{$index}}" guild="{{server.id}}" type="button">DELETE</button></td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -17,6 +17,11 @@ input {
     margin-bottom: 0px;
 }
 
+.queueSelect {
+    margin-left: 3em;
+    color: #000;
+}
+
 p {
     display: inline;
     margin-bottom: 0px;
@@ -53,6 +58,9 @@ thead {
     font-weight: 400;
 }
 
+.button {
+    color: #fff;
+}
 
 .queue td {
     border: 0px;

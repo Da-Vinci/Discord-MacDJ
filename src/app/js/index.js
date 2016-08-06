@@ -33,16 +33,24 @@ function MainController($scope, $sce) {
       });
 
       console.log(client.credits);
-      
+
       window.$('#prefix').val(client.prefix);
       window.$('#username').val(client.user.username);
       window.client = client;
-      
+
       if ($('.overlay')) $('.overlay').remove();
-      
+
       $scope.$apply();
       applyJS();
     }
+
+    fetch('https://temp.discord.fm/libraries/json').then(r => r.json())
+      .then(data => {
+          $scope.dfm = data;
+          console.log(data);
+          $scope.$apply();
+      })
+      .catch(e => $scope.dfm = []);
 
     ipcRenderer.on('ready', updateClient);
     ipcRenderer.on('update', updateClient);
