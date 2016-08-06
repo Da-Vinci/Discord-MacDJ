@@ -99,20 +99,38 @@ module.exports = function (grunt) {
 
     exec: {
         appdmg: {
-            cmd: 'appdmg ./appdmg.json ../builds/MacDJ-darwin-x64/MacDJ.dmg'
+            cmd: 'mkdir -p ../builds/dist/osx && appdmg ./appdmg.json ../builds/dist/osx/MacDJ_<%= pkg.version %>.dmg'
         }
+    },
+
+    'create-windows-installer': {
+      x64: {
+        appDirectory: '../builds/MacDJ-win32-x64',
+        outputDirectory: '../builds/dist/win32-x64',
+        authors: 'The Da Vinci Team',
+        exe: 'MacDJ.exe'
+      },
+      ia32: {
+        appDirectory: '../builds/MacDJ-win32-ia32',
+        outputDirectory: '../builds/dist/win32-ia32',
+        authors: 'The Da Vinci Team',
+        exe: 'MacDJ.exe'
+      }
     }
   });
 
   // load plugins
   grunt.loadNpmTasks('gruntify-eslint');
   grunt.loadNpmTasks('grunt-exec');
+  grunt.loadNpmTasks('grunt-electron-installer')
 
   // register tasks
   grunt.registerTask('lint', ['eslint']);
-  grunt.registerTask('appdmg', ['eslint', 'electron:osxBuild', 'exec:appdmg']);
+  grunt.registerTask('appdmg', ['exec:appdmg']);
+  grunt.registerTask('appmsi', ['create-windows-installer'])
   grunt.registerTask('build-osx', ['eslint', 'electron:osxBuild']);
   grunt.registerTask('build-win', ['eslint', 'electron:win32Build', 'electron:win64Build']);
   grunt.registerTask('build-all', ['eslint', 'electron:osxBuild', 'electron:win32Build', 'electron:win64Build']);
+  grunt.registerTask('build-dist', ['eslint', 'electron:osxBuild', 'electron:win32Build', 'electron:win64Build', 'exec:appdmg', 'create-windows-installer'])
 
 };
