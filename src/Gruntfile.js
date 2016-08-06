@@ -8,7 +8,7 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON(path.resolve('./package.json')),
-    companyName: 'The Da Vinci Team',
+    companyName: 'The DaVinci Team',
     copyright: 'Copyright (C) 2016 The Da Vinci Team',
 
     eslint: {
@@ -107,13 +107,13 @@ module.exports = function (grunt) {
       x64: {
         appDirectory: '../builds/MacDJ-win32-x64',
         outputDirectory: '../builds/dist/win32-x64',
-        authors: 'The Da Vinci Team',
+        authors: 'The DaVinci Team',
         exe: 'MacDJ.exe'
       },
       ia32: {
         appDirectory: '../builds/MacDJ-win32-ia32',
         outputDirectory: '../builds/dist/win32-ia32',
-        authors: 'The Da Vinci Team',
+        authors: 'The DaVinci Team',
         exe: 'MacDJ.exe'
       }
     }
