@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Exo:300,400');
 body {
-    background-color: #26C6DA;
+    background-color: #2C2F33;
     color: #fff;
     font-family: Exo;
     font-weight: 100;
@@ -20,6 +20,11 @@ input {
 .queueSelect {
     margin-left: 3em;
     color: #000;
+}
+
+.button {
+    color: #fff;
+    border: 1px solid #7289DA;
 }
 
 p {
