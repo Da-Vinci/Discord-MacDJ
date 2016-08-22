@@ -24,7 +24,14 @@ function MainController($scope, $sce) {
 
     $scope.queue = {};
 
-    $scope.dfm = [];
+    $scope.dfmList = {};
+
+    $scope.dfm = ["item"];
+    console.log(remote.app.dfm);
+    remote.app.dfm.fetch().then((items) => {
+      console.log(items);
+      $scope.dfm = items.map(item => {return {key: item.id, name: item.name}});
+    });
 
     function updateClient(event, client) {
       $scope.client = client.user;
@@ -79,6 +86,13 @@ function MainController($scope, $sce) {
       applyJS();
     });
 
+    ipcRenderer.on('playlistUpdate', (event, data) => {
+      console.log('playlistUpdate', event, data);
+      $scope.dfmList[data.guild] = data;
+      $scope.$apply();
+      applyJS();
+    });
+
     ipcRenderer.on('error', (event, data) => {
         noty({text: data, type: 'error', timeout: 3000});
     });
@@ -90,9 +104,10 @@ function MainController($scope, $sce) {
 
 function applyJS() {
     let volume = $('#volume'),
+        username = $('#username'),
         del = $('.delete'),
-        add = $('.addButton');
-
+        add = $('.addButton'),
+        queueSelect = $('.queueSelect');
     $('.setting').unbind();
     volume.unbind();
     del.unbind();
@@ -110,6 +125,12 @@ function applyJS() {
         console.log($(this).val());
     });
 
+    console.log(queueSelect);
+    queueSelect.on('change', function(e) {
+      console.log(e.currentTarget.value);
+      console.log(e);
+    });
+
     $('#prefix').on('keypress', function (e) {
         if (e.which === 13) {
             if ($(this).val().length < 33) {
@@ -120,7 +141,7 @@ function applyJS() {
         }
     });
 
-    $('#username').on('keypress', function (e) {
+    username.on('keypress', function (e) {
       if (e.which === 13) {
         if ($(this).val().length > 2) {
           ipcRenderer.send('command', {command: 'username', data: $(this).val()});
@@ -129,7 +150,7 @@ function applyJS() {
       }
     });
 
-    $('#username').on('click', function() {
+    username.on('click', function() {
         noty({text: "A bot's username can only be changed twice per hour", type: 'warning', timeout: 3000});
     });
 

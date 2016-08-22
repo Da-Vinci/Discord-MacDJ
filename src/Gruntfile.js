@@ -125,7 +125,7 @@ module.exports = function (grunt) {
   // load plugins
   grunt.loadNpmTasks('gruntify-eslint');
   grunt.loadNpmTasks('grunt-exec');
-  grunt.loadNpmTasks('grunt-electron-installer')
+  grunt.loadNpmTasks('grunt-electron-installer');
 
   // register tasks
   grunt.registerTask('lint', ['eslint']);

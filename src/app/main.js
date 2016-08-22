@@ -11,12 +11,10 @@ const Menu = electron.Menu;
 const appMenu = require('./appMenu')(app);
 const utils = require('./lib/utils');
 const Player = require('./lib/player');
+const Dfm = require('./lib/d.fm.js');
 const credits = require('./credits');
 const client = new Discord();
 const dbPath = path.join(app.getPath('userData'), 'config.db');
-
-
-let main;
 
 if (!utils.existsSync(dbPath)) {
   fs.writeFileSync(dbPath, JSON.stringify({}));
@@ -37,6 +35,8 @@ class Main {
     console.log(app.getPath('userData'));
 
     this.config = app.config = this.getConfig();
+    const dfm = new Dfm({data: this.config, save: this.saveConfig, get: this.getConfig});
+    this.dfm = app.dfm = dfm;
 
     app.createAboutWindow = this.createAboutWindow.bind(this);
 
@@ -320,5 +320,5 @@ class Main {
   }
 }
 
-main = new Main();
+var main = new Main();
 module.exports = main;

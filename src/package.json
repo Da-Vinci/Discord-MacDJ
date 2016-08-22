@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "discordie": "github:Bots-js/discordie#macdj",
-    "ytdl-core": "^0.7.17"
+    "ytdl-core": "^0.7.17",
+    "request": "latest"
   },
   "optionalDependencies": {
     "appdmg": "^0.4.5"
